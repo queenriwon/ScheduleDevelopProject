@@ -68,4 +68,15 @@ public class ScheduleService {
 
         return findScheduleById(id);
     }
+
+    @Transactional
+    public void deleteSchedule(Long id, String password) {
+        Schedules findSchedule = scheduleRepository.findSchedulesByIdOrElseThrow(id);
+        Users findScheduleUsers = findSchedule.getUsers();
+
+        if (!findScheduleUsers.getPassword().equals(password)){
+            throw new PasswordMismatchException("비밀번호 불일치");
+        }
+        scheduleRepository.deleteById(id);
+    }
 }

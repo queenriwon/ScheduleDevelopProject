@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -44,6 +45,14 @@ public class ScheduleController {
             @RequestBody ScheduleUpdateRequestDto dto) {
         ScheduleResponseDto scheduleResponseDto = scheduleService.updateSchedule(id, dto);
         return ApiResponseDto.OK(scheduleResponseDto, "id " + id + " 일정 수정 성공");
+    }
+
+    @PostMapping("/{id}/delete")
+    public ApiResponseDto<Void> deleteSchedule(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> request) {
+        scheduleService.deleteSchedule(id, request.get("password"));
+        return ApiResponseDto.OK("id " + id + " 일정 삭제");
     }
 
 }

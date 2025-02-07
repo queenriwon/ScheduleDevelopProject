@@ -78,8 +78,6 @@ public class UserService {
     public void deleteUser(Long id, String password) {
         Users findUser = userRepository.findUsersByIdOrElseThrow(id);
 
-        log.info(findUser.getPassword());
-        log.info(password);
         if (!findUser.getPassword().equals(password)) {
             throw new PasswordMismatchException("기존 비밀번호와 불일치");
         }

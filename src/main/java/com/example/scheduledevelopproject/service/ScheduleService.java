@@ -1,5 +1,6 @@
 package com.example.scheduledevelopproject.service;
 
+import com.example.scheduledevelopproject.config.PasswordEncoder;
 import com.example.scheduledevelopproject.dto.request.ScheduleCreateRequestDto;
 import com.example.scheduledevelopproject.dto.request.ScheduleUpdateRequestDto;
 import com.example.scheduledevelopproject.dto.response.ScheduleResponseDto;
@@ -55,7 +56,7 @@ public class ScheduleService {
         Schedules findSchedule = scheduleRepository.findSchedulesByIdOrElseThrow(id);
         Users findScheduleUsers = findSchedule.getUsers();
 
-        if (!findScheduleUsers.getPassword().equals(dto.getPassword())){
+        if (!PasswordEncoder.matches(dto.getPassword(), findScheduleUsers.getPassword())) {
             throw new PasswordMismatchException("비밀번호 불일치");
         }
 
@@ -74,7 +75,7 @@ public class ScheduleService {
         Schedules findSchedule = scheduleRepository.findSchedulesByIdOrElseThrow(id);
         Users findScheduleUsers = findSchedule.getUsers();
 
-        if (!findScheduleUsers.getPassword().equals(password)){
+        if (!PasswordEncoder.matches(password, findScheduleUsers.getPassword())) {
             throw new PasswordMismatchException("비밀번호 불일치");
         }
         scheduleRepository.deleteById(id);

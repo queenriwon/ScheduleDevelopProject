@@ -1,10 +1,8 @@
 package com.example.scheduledevelopproject.entity;
 
+import com.example.scheduledevelopproject.config.PasswordEncoder;
 import com.example.scheduledevelopproject.dto.request.UserSignUpRequestDto;
-import com.example.scheduledevelopproject.dto.response.UserResponseDto;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,16 +25,10 @@ public class Users extends BaseEntity{
     @Column(nullable = false)
     private String password;
 
-    public Users(String name, String email, String password) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-    }
-
     public Users(UserSignUpRequestDto dto) {
         this.name = dto.getName();
         this.email = dto.getEmail();
-        this.password = dto.getPassword();
+        this.password = PasswordEncoder.encode(dto.getPassword());
     }
 
     public void updateUsers(String name) {

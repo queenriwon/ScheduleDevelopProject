@@ -1,9 +1,6 @@
 package com.example.scheduledevelopproject.dto.request;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ScheduleCreateRequestDto {
 
-    @NotBlank(message = "유져 ID는 필수 입력값 입니다.")
+    @NotNull(message = "유져 ID는 필수 입력값 입니다.")
     private final Long userId;
 
     @Size(max = 20, message = "일정 제목은 20자까지 작성할 수 있습니다.")

@@ -1,5 +1,6 @@
 package com.example.scheduledevelopproject.service;
 
+import com.example.scheduledevelopproject.config.PasswordEncoder;
 import com.example.scheduledevelopproject.dto.request.UserSignUpRequestDto;
 import com.example.scheduledevelopproject.dto.request.UserUpdateNameRequestDto;
 import com.example.scheduledevelopproject.dto.request.UserUpdatePasswordRequestDto;
@@ -51,7 +52,7 @@ public class UserService {
     public UserResponseDto updateUsername(Long id, UserUpdateNameRequestDto dto) {
         Users findUser = userRepository.findUsersByIdOrElseThrow(id);
 
-        if (!findUser.getPassword().equals(dto.getPassword())) {
+        if (!PasswordEncoder.matches(dto.getPassword(), findUser.getPassword())) {
             throw new PasswordMismatchException("비밀번호 불일치");
         }
 
@@ -67,19 +68,19 @@ public class UserService {
 
         Users findUser = userRepository.findUsersByIdOrElseThrow(id);
 
-        if (!findUser.getPassword().equals(dto.getOldPassword())) {
-            throw new PasswordMismatchException("기존 비밀번호와 불일치");
+        if (!PasswordEncoder.matches(dto.getOldPassword(), findUser.getPassword())) {
+            throw new PasswordMismatchException("비밀번호 불일치");
         }
 
-        findUser.updatePassword(dto.getNewPassword());
+        findUser.updatePassword(PasswordEncoder.encode(dto.getNewPassword()));
     }
 
     @Transactional
     public void deleteUser(Long id, String password) {
         Users findUser = userRepository.findUsersByIdOrElseThrow(id);
 
-        if (!findUser.getPassword().equals(password)) {
-            throw new PasswordMismatchException("기존 비밀번호와 불일치");
+        if (!PasswordEncoder.matches(password, findUser.getPassword())) {
+            throw new PasswordMismatchException("비밀번호 불일치");
         }
         userRepository.delete(findUser);
     }

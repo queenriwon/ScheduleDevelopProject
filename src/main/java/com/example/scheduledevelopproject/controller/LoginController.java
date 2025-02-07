@@ -36,7 +36,7 @@ public class LoginController {
                         loginUser.getName(),
                         loginUser.getEmail());
                 session.setAttribute("userId", loginUser.getId());
-                session.setMaxInactiveInterval(1800);
+                session.setMaxInactiveInterval(1800); //30분
 
                 return ApiResponseDto.OK("로그인 성공");
             }

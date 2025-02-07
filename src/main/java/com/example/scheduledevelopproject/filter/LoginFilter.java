@@ -28,6 +28,7 @@ public class LoginFilter implements Filter {
         if (!isWhiteList(responseURI)) {
             HttpSession session = httpRequest.getSession(false);
 
+            // Todo: 에러처리를 따로 해줘야됨
             if (session == null || session.getAttribute("userId") == null) {
                 throw new RuntimeException("로그인을 해야 이용할 수 있습니다.");
             }

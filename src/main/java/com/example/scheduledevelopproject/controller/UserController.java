@@ -1,6 +1,8 @@
 package com.example.scheduledevelopproject.controller;
 
 import com.example.scheduledevelopproject.dto.request.UserSignUpRequestDto;
+import com.example.scheduledevelopproject.dto.request.UserUpdateNameRequestDto;
+import com.example.scheduledevelopproject.dto.request.UserUpdatePasswordRequestDto;
 import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
 import com.example.scheduledevelopproject.dto.response.UserResponseDto;
 import com.example.scheduledevelopproject.service.UserService;
@@ -34,5 +36,21 @@ public class UserController {
     public ApiResponseDto<UserResponseDto> findUserById(@PathVariable Long userId) {
         UserResponseDto userResponseDto = userService.findUserById(userId);
         return ApiResponseDto.OK(userResponseDto, "id " + userId + " 유저 조회 성공");
+    }
+
+    @PatchMapping("/{userId}/name")
+    public ApiResponseDto<UserResponseDto> updateUsername(
+            @PathVariable Long userId,
+            @RequestBody UserUpdateNameRequestDto dto) {
+        UserResponseDto userResponseDto = userService.updateUsername(userId, dto);
+        return ApiResponseDto.OK(userResponseDto, "id " + userId + " 유저이름 수정 성공");
+    }
+
+    @PatchMapping("/{userId}/password")
+    public ApiResponseDto<Void> updatePassword(
+            @PathVariable Long userId,
+            @RequestBody UserUpdatePasswordRequestDto dto) {
+        userService.updatePassword(userId, dto);
+        return ApiResponseDto.OK("id " + userId + " 비밀번호 수정 성공");
     }
 }

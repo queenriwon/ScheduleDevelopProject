@@ -4,6 +4,7 @@ import com.example.scheduledevelopproject.dto.request.UserSignUpRequestDto;
 import com.example.scheduledevelopproject.dto.response.UserResponseDto;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,5 +37,13 @@ public class Users extends BaseEntity{
         this.name = dto.getName();
         this.email = dto.getEmail();
         this.password = dto.getPassword();
+    }
+
+    public void updateUsers(String name) {
+        this.name = name;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 }

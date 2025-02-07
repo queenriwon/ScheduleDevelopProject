@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
         return ApiResponseDto.fail(ErrorCode.MISSING_REQUIRED_FIELD);
     }
 
-    @ExceptionHandler({NotFoundScheduleId.class, NotFoundUserId.class})
+    @ExceptionHandler({NotFoundScheduleId.class, NotFoundUserId.class, NotFoundCommentId.class})
     protected ApiResponseDto<String> idNotFoundExceptionHandler(RuntimeException ex) {
         log.error("예외 발생 = {}", ex.getMessage());
         return ApiResponseDto.fail(ErrorCode.NOT_FOUND_ID);
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
         return ApiResponseDto.fail(ErrorCode.LOGIN_UNAUTHORIZED);
     }
 
-    @ExceptionHandler({UnauthorizedScheduleAccessException.class, UnauthorizedUserAccessException.class})
+    @ExceptionHandler({UnauthorizedScheduleAccessException.class, UnauthorizedUserAccessException.class, UnauthorizedCommentAccessException.class})
     protected ApiResponseDto<String> unauthorizedScheduleAccessExceptionHandler(RuntimeException ex) {
         log.error("예외 발생 = {}", ex.getMessage());
         return ApiResponseDto.fail(ErrorCode.UNAUTHORIZED);

@@ -5,11 +5,16 @@ import com.example.scheduledevelopproject.dto.response.CommentResponseDto;
 import com.example.scheduledevelopproject.entity.Comments;
 import com.example.scheduledevelopproject.entity.Schedules;
 import com.example.scheduledevelopproject.entity.Users;
+import com.example.scheduledevelopproject.exception.custom.NotFoundCommentId;
+import com.example.scheduledevelopproject.exception.custom.NotFoundScheduleId;
+import com.example.scheduledevelopproject.exception.custom.UnauthorizedCommentAccessException;
+import com.example.scheduledevelopproject.exception.custom.UnauthorizedScheduleAccessException;
 import com.example.scheduledevelopproject.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +43,19 @@ public class CommentService {
     }
 
     public CommentResponseDto updateComment(Long commentId, Long scheduleId, Long userId, CommentRequestDto dto) {
-        commentRepository.findCommentsById(commentId);
+        Comments findComment = findCommentsByIdOrElseThrow(commentId);
+        Users findCommentUsers = findComment.getUsers();
 
+        if (!Objects.equals(userId, findCommentUsers.getId())) {
+            throw new UnauthorizedCommentAccessException("댓글 수정 권한 없음");
+        }
+        findComment.updateContents(dto.getContents());
+
+        return new CommentResponseDto(findCommentsByIdOrElseThrow(commentId));
+    }
+
+    private Comments findCommentsByIdOrElseThrow(Long id) {
+        return commentRepository.findCommentsById(id).orElseThrow(() ->
+                new NotFoundCommentId("일정 id를 찾지 못함"));
     }
 }

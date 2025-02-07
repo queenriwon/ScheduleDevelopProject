@@ -46,8 +46,8 @@ public class CommentController {
             HttpServletRequest httpServletRequest
     ) {
         Long userId = getUserIdBySession(httpServletRequest);
-        commentService.updateComment(commentId, scheduleId, userId, dto);
-        return ApiResponseDto.OK(,scheduleId + " 일정 댓글 조회");
+        CommentResponseDto commentResponseDto = commentService.updateComment(commentId, scheduleId, userId, dto);
+        return ApiResponseDto.OK(commentResponseDto,scheduleId + " 일정 댓글 조회");
     }
 
     private Long getUserIdBySession(HttpServletRequest httpServletRequest) {

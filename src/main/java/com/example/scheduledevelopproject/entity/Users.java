@@ -1,5 +1,7 @@
 package com.example.scheduledevelopproject.entity;
 
+import com.example.scheduledevelopproject.dto.request.UserSignUpRequestDto;
+import com.example.scheduledevelopproject.dto.response.UserResponseDto;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,5 +30,11 @@ public class Users extends BaseEntity{
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public Users(UserSignUpRequestDto dto) {
+        this.name = dto.getName();
+        this.email = dto.getEmail();
+        this.password = dto.getPassword();
     }
 }

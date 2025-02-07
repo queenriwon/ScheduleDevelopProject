@@ -1,5 +1,6 @@
 package com.example.scheduledevelopproject.entity;
 
+import com.example.scheduledevelopproject.dto.request.ScheduleCreateRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,8 +27,8 @@ public class Schedules extends BaseEntity{
     @Column(nullable = false, columnDefinition = "longtext")
     private String todoContents;
 
-    public Schedules(String todoTitle, String todoContents) {
-        this.todoTitle = todoTitle;
-        this.todoContents = todoContents;
+    public Schedules(ScheduleCreateRequestDto dto) {
+        this.todoTitle = dto.getTodoTitle();
+        this.todoContents = dto.getTodoContents();
     }
 }

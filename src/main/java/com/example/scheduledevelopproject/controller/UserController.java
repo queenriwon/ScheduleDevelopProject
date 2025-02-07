@@ -6,6 +6,7 @@ import com.example.scheduledevelopproject.dto.request.UserUpdatePasswordRequestD
 import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
 import com.example.scheduledevelopproject.dto.response.UserResponseDto;
 import com.example.scheduledevelopproject.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/sign-up")
-    public ApiResponseDto<UserResponseDto> signUpUser(@RequestBody UserSignUpRequestDto dto) {
+    public ApiResponseDto<UserResponseDto> signUpUser(@Valid  @RequestBody UserSignUpRequestDto dto) {
         UserResponseDto userResponseDto = userService.signUpUser(dto);
         return ApiResponseDto.OK(userResponseDto, "회원가입 성공");
     }
@@ -42,7 +43,7 @@ public class UserController {
     @PatchMapping("/{userId}/name")
     public ApiResponseDto<UserResponseDto> updateUsername(
             @PathVariable Long userId,
-            @RequestBody UserUpdateNameRequestDto dto) {
+            @Valid @RequestBody UserUpdateNameRequestDto dto) {
         UserResponseDto userResponseDto = userService.updateUsername(userId, dto);
         return ApiResponseDto.OK(userResponseDto, "id " + userId + " 유저이름 수정 성공");
     }
@@ -50,7 +51,7 @@ public class UserController {
     @PatchMapping("/{userId}/password")
     public ApiResponseDto<Void> updatePassword(
             @PathVariable Long userId,
-            @RequestBody UserUpdatePasswordRequestDto dto) {
+            @Valid @RequestBody UserUpdatePasswordRequestDto dto) {
         userService.updatePassword(userId, dto);
         return ApiResponseDto.OK("id " + userId + " 비밀번호 수정 성공");
     }

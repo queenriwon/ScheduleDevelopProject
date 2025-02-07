@@ -6,6 +6,7 @@ import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
 import com.example.scheduledevelopproject.dto.response.ScheduleResponseDto;
 import com.example.scheduledevelopproject.entity.Schedules;
 import com.example.scheduledevelopproject.service.ScheduleService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping("/post")
-    public ApiResponseDto<ScheduleResponseDto> createSchedule(@RequestBody ScheduleCreateRequestDto dto) {
+    public ApiResponseDto<ScheduleResponseDto> createSchedule(@Valid @RequestBody ScheduleCreateRequestDto dto) {
         ScheduleResponseDto scheduleResponseDto = scheduleService.createSchedule(dto);
         return ApiResponseDto.OK(scheduleResponseDto, "일정 작성 성공");
     }
@@ -42,7 +43,7 @@ public class ScheduleController {
     @PatchMapping("/{id}")
     public ApiResponseDto<ScheduleResponseDto> updateSchedule(
             @PathVariable Long id,
-            @RequestBody ScheduleUpdateRequestDto dto) {
+            @Valid @RequestBody ScheduleUpdateRequestDto dto) {
         ScheduleResponseDto scheduleResponseDto = scheduleService.updateSchedule(id, dto);
         return ApiResponseDto.OK(scheduleResponseDto, "id " + id + " 일정 수정 성공");
     }

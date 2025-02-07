@@ -50,7 +50,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<UserResponseDto> findAllUser() {
         List<Users> allUsers = userRepository.findAll();
-        return allUsers.stream().map(UserResponseDto::new).collect(Collectors.toList());
+        return allUsers.stream().map(UserResponseDto::new).toList();
     }
 
     @Transactional(readOnly = true)

@@ -7,6 +7,7 @@ import com.example.scheduledevelopproject.dto.response.ScheduleResponseDto;
 import com.example.scheduledevelopproject.entity.Schedules;
 import com.example.scheduledevelopproject.entity.Users;
 import com.example.scheduledevelopproject.exception.custom.InvalidScheduleUpdateRequestException;
+import com.example.scheduledevelopproject.exception.custom.NotFoundScheduleId;
 import com.example.scheduledevelopproject.exception.custom.PasswordMismatchException;
 import com.example.scheduledevelopproject.exception.custom.UnauthorizedScheduleAccessException;
 import com.example.scheduledevelopproject.repository.ScheduleRepository;
@@ -40,12 +41,13 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public List<ScheduleResponseDto> findAllSchedule() {
         List<Schedules> allSchedule = scheduleRepository.findAll();
-        return allSchedule.stream().map(ScheduleResponseDto::new).collect(Collectors.toList());
+        return allSchedule.stream().map(ScheduleResponseDto::new).toList();
     }
 
     @Transactional(readOnly = true)
     public ScheduleResponseDto findScheduleById(Long id) {
-        Schedules findSchedule = scheduleRepository.findSchedulesByIdOrElseThrow(id);
+        Schedules findSchedule = scheduleRepository.findSchedulesById(id).orElseThrow(()->
+                new NotFoundScheduleId("찾을 수 없는 일정"));
         return new ScheduleResponseDto(findSchedule);
     }
 
@@ -55,7 +57,7 @@ public class ScheduleService {
             throw new InvalidScheduleUpdateRequestException("일정 제목, 내용 모두 받지 못함");
         }
 
-        Schedules findSchedule = scheduleRepository.findSchedulesByIdOrElseThrow(id);
+        Schedules findSchedule = findSchedulesByIdOrElseThrow(id);
         Users findScheduleUsers = findSchedule.getUsers();
 
         if (!Objects.equals(userId, findScheduleUsers.getId())) {
@@ -74,7 +76,7 @@ public class ScheduleService {
 
     @Transactional
     public void deleteSchedule(Long id, Long userId, String password) {
-        Schedules findSchedule = scheduleRepository.findSchedulesByIdOrElseThrow(id);
+        Schedules findSchedule = findSchedulesByIdOrElseThrow(id);
         Users findScheduleUsers = findSchedule.getUsers();
 
         if (!Objects.equals(userId, findScheduleUsers.getId())) {
@@ -82,5 +84,10 @@ public class ScheduleService {
         }
 
         scheduleRepository.deleteById(id);
+    }
+
+    public Schedules findSchedulesByIdOrElseThrow(Long id) {
+        return scheduleRepository.findSchedulesById(id).orElseThrow(()->
+                new NotFoundScheduleId("찾을 수 없는 일정"));
     }
 }

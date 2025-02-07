@@ -10,8 +10,8 @@ public interface ScheduleRepository extends JpaRepository<Schedules, Long> {
 
     Optional<Schedules> findSchedulesById(Long id);
 
-    default Schedules findSchedulesByIdOrElseThrow(Long id) {
-        return findSchedulesById(id).orElseThrow(() ->
-                new NotFoundScheduleId("찾을 수 없는 일정"));
-    }
+//    default Schedules findSchedulesByIdOrElseThrow(Long id) {
+//        return findSchedulesById(id).orElseThrow(() ->
+//                new NotFoundScheduleId("찾을 수 없는 일정"));
+//    }
 }

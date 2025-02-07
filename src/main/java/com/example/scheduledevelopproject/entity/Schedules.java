@@ -31,4 +31,11 @@ public class Schedules extends BaseEntity{
         this.todoTitle = dto.getTodoTitle();
         this.todoContents = dto.getTodoContents();
     }
+
+    public void updateTodoTitle(String todoTitle) {
+        this.todoTitle = todoTitle;
+    }
+    public void updateTodoContents(String todoContents) {
+        this.todoContents = todoContents;
+    }
 }

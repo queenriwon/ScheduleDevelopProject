@@ -1,6 +1,7 @@
 package com.example.scheduledevelopproject.controller;
 
 import com.example.scheduledevelopproject.dto.request.ScheduleCreateRequestDto;
+import com.example.scheduledevelopproject.dto.request.ScheduleUpdateRequestDto;
 import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
 import com.example.scheduledevelopproject.dto.response.ScheduleResponseDto;
 import com.example.scheduledevelopproject.entity.Schedules;
@@ -35,6 +36,14 @@ public class ScheduleController {
     public ApiResponseDto<ScheduleResponseDto> findScheduleById(@PathVariable Long id) {
         ScheduleResponseDto scheduleResponseDto = scheduleService.findScheduleById(id);
         return ApiResponseDto.OK(scheduleResponseDto, "id " + id + " 일정 조회 성공");
+    }
+
+    @PatchMapping("/{id}")
+    public ApiResponseDto<ScheduleResponseDto> updateSchedule(
+            @PathVariable Long id,
+            @RequestBody ScheduleUpdateRequestDto dto) {
+        ScheduleResponseDto scheduleResponseDto = scheduleService.updateSchedule(id, dto);
+        return ApiResponseDto.OK(scheduleResponseDto, "id " + id + " 일정 수정 성공");
     }
 
 }

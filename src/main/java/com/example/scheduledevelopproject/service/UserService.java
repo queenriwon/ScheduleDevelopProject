@@ -9,6 +9,7 @@ import com.example.scheduledevelopproject.exception.custom.NoMatchPasswordConfir
 import com.example.scheduledevelopproject.exception.custom.PasswordMismatchException;
 import com.example.scheduledevelopproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -70,5 +72,17 @@ public class UserService {
         }
 
         findUser.updatePassword(dto.getNewPassword());
+    }
+
+    @Transactional
+    public void deleteUser(Long id, String password) {
+        Users findUser = userRepository.findUsersByIdOrElseThrow(id);
+
+        log.info(findUser.getPassword());
+        log.info(password);
+        if (!findUser.getPassword().equals(password)) {
+            throw new PasswordMismatchException("기존 비밀번호와 불일치");
+        }
+        userRepository.delete(findUser);
     }
 }

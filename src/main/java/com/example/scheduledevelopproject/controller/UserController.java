@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -52,5 +53,13 @@ public class UserController {
             @RequestBody UserUpdatePasswordRequestDto dto) {
         userService.updatePassword(userId, dto);
         return ApiResponseDto.OK("id " + userId + " 비밀번호 수정 성공");
+    }
+
+    @PostMapping("/{userId}/delete")
+    public ApiResponseDto<Void> deleteUser(
+            @PathVariable Long userId,
+            @RequestBody Map<String,String> request) {
+        userService.deleteUser(userId, request.get("password"));
+        return ApiResponseDto.OK("id " + userId + " 회원 탈퇴");
     }
 }

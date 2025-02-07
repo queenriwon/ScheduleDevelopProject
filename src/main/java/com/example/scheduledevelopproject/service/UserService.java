@@ -27,6 +27,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    @Transactional
     public Users login(LoginRequestDto dto) {
         Users findUser = userRepository.findUsersByEmailOrElseThrow(dto.getEmail());
 
@@ -36,6 +37,7 @@ public class UserService {
         return findUser;
     }
 
+    @Transactional
     public UserResponseDto signUpUser(UserSignUpRequestDto dto) {
         if (!dto.getPassword().equals(dto.getPasswordCheck())) {
             throw new NoMatchPasswordConfirmation("회원가입 유저 비밀번호 확인 불일치");

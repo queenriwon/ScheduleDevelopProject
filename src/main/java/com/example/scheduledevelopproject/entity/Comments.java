@@ -1,9 +1,8 @@
 package com.example.scheduledevelopproject.entity;
 
-import com.example.scheduledevelopproject.dto.request.CommentCreateRequestDto;
+import com.example.scheduledevelopproject.dto.request.CommentRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,7 +31,7 @@ public class Comments extends BaseEntity{
     @Size(max = 200)
     private String contents;
 
-    public Comments(CommentCreateRequestDto dto) {
+    public Comments(CommentRequestDto dto) {
         this.contents = dto.getContents();
     }
 

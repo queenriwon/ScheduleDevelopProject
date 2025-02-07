@@ -21,7 +21,7 @@ public class ScheduleCreateRequestDto {
     @NotBlank(message = "유져 ID는 필수 입력값 입니다.")
     private final Long userId;
 
-    @Size(max = 200, message = "일정 제목은 200자까지 작성할 수 있습니다.")
+    @Size(max = 20, message = "일정 제목은 20자까지 작성할 수 있습니다.")
     @NotBlank(message = "일정 제목은 필수 입력값 입니다.")
     private final String todoTitle;
 

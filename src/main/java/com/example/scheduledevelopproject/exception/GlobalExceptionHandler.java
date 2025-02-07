@@ -37,6 +37,12 @@ public class GlobalExceptionHandler {
         return ApiResponseDto.fail(ErrorCode.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(NotFoundUserByEmail.class)
+    protected ApiResponseDto<String> notFoundUserByEmailExceptionHandler(RuntimeException ex) {
+        log.error("예외 발생 = {}", ex.getMessage());
+        return ApiResponseDto.fail(ErrorCode.LOGIN_UNAUTHORIZED);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResponseDto<String> handleValidationExceptionHandler(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult()

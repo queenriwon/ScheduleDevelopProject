@@ -1,6 +1,7 @@
 package com.example.scheduledevelopproject.repository;
 
 import com.example.scheduledevelopproject.entity.Users;
+import com.example.scheduledevelopproject.exception.custom.NotFoundUserByEmail;
 import com.example.scheduledevelopproject.exception.custom.NotFoundUserId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,5 +14,12 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     default Users findUsersByIdOrElseThrow(Long id) {
         return findUsersById(id).orElseThrow(() ->
                 new NotFoundUserId("찾을 수 없는 user id"));
+    }
+
+    Optional<Users> findUsersByEmail(String email);
+
+    default Users findUsersByEmailOrElseThrow(String email){
+        return findUsersByEmail(email).orElseThrow(() ->
+                new NotFoundUserByEmail("이메일로 유저를 찾을 수 없습니다."));
     }
 }

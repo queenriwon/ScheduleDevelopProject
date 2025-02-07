@@ -1,6 +1,7 @@
 package com.example.scheduledevelopproject.service;
 
 import com.example.scheduledevelopproject.config.PasswordEncoder;
+import com.example.scheduledevelopproject.dto.request.LoginRequestDto;
 import com.example.scheduledevelopproject.dto.request.UserSignUpRequestDto;
 import com.example.scheduledevelopproject.dto.request.UserUpdateNameRequestDto;
 import com.example.scheduledevelopproject.dto.request.UserUpdatePasswordRequestDto;
@@ -14,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Member;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +24,15 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    public Users login(LoginRequestDto dto) {
+        Users findUser = userRepository.findUsersByEmailOrElseThrow(dto.getEmail());
+
+        if (!PasswordEncoder.matches(dto.getPassword(), findUser.getPassword())) {
+            throw new PasswordMismatchException("비밀번호 불일치");
+        }
+        return findUser;
+    }
 
     public UserResponseDto signUpUser(UserSignUpRequestDto dto) {
         if (!dto.getPassword().equals(dto.getPasswordCheck())) {

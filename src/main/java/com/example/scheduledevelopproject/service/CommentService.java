@@ -42,7 +42,7 @@ public class CommentService {
         return commentsList.stream().map(CommentResponseDto::new).toList();
     }
 
-    public CommentResponseDto updateComment(Long commentId, Long scheduleId, Long userId, CommentRequestDto dto) {
+    public CommentResponseDto updateComment(Long commentId, Long userId, CommentRequestDto dto) {
         Comments findComment = findCommentsByIdOrElseThrow(commentId);
         Users findCommentUsers = findComment.getUsers();
 
@@ -52,6 +52,16 @@ public class CommentService {
         findComment.updateContents(dto.getContents());
 
         return new CommentResponseDto(findCommentsByIdOrElseThrow(commentId));
+    }
+
+    public void deleteComment(Long commentId, Long userId) {
+        Comments findComment = findCommentsByIdOrElseThrow(commentId);
+        Users findCommentUsers = findComment.getUsers();
+
+        if (!Objects.equals(userId, findCommentUsers.getId())) {
+            throw new UnauthorizedCommentAccessException("댓글 삭제 권한 없음");
+        }
+        commentRepository.deleteById(commentId);
     }
 
     private Comments findCommentsByIdOrElseThrow(Long id) {

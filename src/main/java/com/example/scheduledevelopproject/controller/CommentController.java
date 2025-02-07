@@ -46,8 +46,19 @@ public class CommentController {
             HttpServletRequest httpServletRequest
     ) {
         Long userId = getUserIdBySession(httpServletRequest);
-        CommentResponseDto commentResponseDto = commentService.updateComment(commentId, scheduleId, userId, dto);
-        return ApiResponseDto.OK(commentResponseDto,scheduleId + " 일정 댓글 조회");
+        CommentResponseDto commentResponseDto = commentService.updateComment(commentId, userId, dto);
+        return ApiResponseDto.OK(commentResponseDto,scheduleId + " 일정 댓글 수정");
+    }
+
+    @DeleteMapping("/{scheduleId}/comments/{commentId}")
+    public ApiResponseDto<Void> deleteComment(
+            @PathVariable Long scheduleId,
+            @PathVariable Long commentId,
+            HttpServletRequest httpServletRequest
+    ) {
+        Long userId = getUserIdBySession(httpServletRequest);
+        commentService.deleteComment(commentId, userId);
+        return ApiResponseDto.OK(scheduleId + " 일정 댓글 삭제");
     }
 
     private Long getUserIdBySession(HttpServletRequest httpServletRequest) {

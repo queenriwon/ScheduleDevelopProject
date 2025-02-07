@@ -43,6 +43,12 @@ public class GlobalExceptionHandler {
         return ApiResponseDto.fail(ErrorCode.LOGIN_UNAUTHORIZED);
     }
 
+    @ExceptionHandler({UnauthorizedScheduleAccessException.class, UnauthorizedUserAccessException.class})
+    protected ApiResponseDto<String> unauthorizedScheduleAccessExceptionHandler(RuntimeException ex) {
+        log.error("예외 발생 = {}", ex.getMessage());
+        return ApiResponseDto.fail(ErrorCode.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResponseDto<String> handleValidationExceptionHandler(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult()

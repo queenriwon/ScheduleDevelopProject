@@ -6,6 +6,8 @@ import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
 import com.example.scheduledevelopproject.dto.response.ScheduleResponseDto;
 import com.example.scheduledevelopproject.entity.Schedules;
 import com.example.scheduledevelopproject.service.ScheduleService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +25,12 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping("/post")
-    public ApiResponseDto<ScheduleResponseDto> createSchedule(@Valid @RequestBody ScheduleCreateRequestDto dto) {
-        ScheduleResponseDto scheduleResponseDto = scheduleService.createSchedule(dto);
+    public ApiResponseDto<ScheduleResponseDto> createSchedule(
+            @Valid @RequestBody ScheduleCreateRequestDto dto,
+            HttpServletRequest httpServletRequest
+    ) {
+        Long userId = getUserIdBySession(httpServletRequest);
+        ScheduleResponseDto scheduleResponseDto = scheduleService.createSchedule(userId, dto);
         return ApiResponseDto.OK(scheduleResponseDto, "일정 작성 성공");
     }
 
@@ -43,17 +49,28 @@ public class ScheduleController {
     @PatchMapping("/{id}")
     public ApiResponseDto<ScheduleResponseDto> updateSchedule(
             @PathVariable Long id,
-            @Valid @RequestBody ScheduleUpdateRequestDto dto) {
-        ScheduleResponseDto scheduleResponseDto = scheduleService.updateSchedule(id, dto);
+            @Valid @RequestBody ScheduleUpdateRequestDto dto,
+            HttpServletRequest httpServletRequest
+    ) {
+        Long userId = getUserIdBySession(httpServletRequest);
+        ScheduleResponseDto scheduleResponseDto = scheduleService.updateSchedule(id, userId, dto);
         return ApiResponseDto.OK(scheduleResponseDto, "id " + id + " 일정 수정 성공");
     }
 
     @PostMapping("/{id}/delete")
     public ApiResponseDto<Void> deleteSchedule(
             @PathVariable Long id,
-            @RequestBody Map<String, String> request) {
-        scheduleService.deleteSchedule(id, request.get("password"));
+            @RequestBody Map<String, String> request,
+            HttpServletRequest httpServletRequest
+    ) {
+        Long userId = getUserIdBySession(httpServletRequest);
+        scheduleService.deleteSchedule(id, userId, request.get("password"));
         return ApiResponseDto.OK("id " + id + " 일정 삭제");
+    }
+
+    private Long getUserIdBySession(HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession(false);
+        return (Long) session.getAttribute("userId");
     }
 
 }

@@ -6,6 +6,8 @@ import com.example.scheduledevelopproject.dto.request.UserUpdatePasswordRequestD
 import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
 import com.example.scheduledevelopproject.dto.response.UserResponseDto;
 import com.example.scheduledevelopproject.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,24 +45,36 @@ public class UserController {
     @PatchMapping("/{userId}/name")
     public ApiResponseDto<UserResponseDto> updateUsername(
             @PathVariable Long userId,
-            @Valid @RequestBody UserUpdateNameRequestDto dto) {
-        UserResponseDto userResponseDto = userService.updateUsername(userId, dto);
+            @Valid @RequestBody UserUpdateNameRequestDto dto,
+            HttpServletRequest httpServletRequest
+    ) {
+        Long userIdBySession = getUserIdBySession(httpServletRequest);
+        UserResponseDto userResponseDto = userService.updateUsername(userId, userIdBySession, dto);
         return ApiResponseDto.OK(userResponseDto, "id " + userId + " 유저이름 수정 성공");
     }
 
     @PatchMapping("/{userId}/password")
     public ApiResponseDto<Void> updatePassword(
             @PathVariable Long userId,
-            @Valid @RequestBody UserUpdatePasswordRequestDto dto) {
-        userService.updatePassword(userId, dto);
+            @Valid @RequestBody UserUpdatePasswordRequestDto dto,
+            HttpServletRequest httpServletRequest
+    ) {
+        Long userIdBySession = getUserIdBySession(httpServletRequest);
+        userService.updatePassword(userId, userIdBySession, dto);
         return ApiResponseDto.OK("id " + userId + " 비밀번호 수정 성공");
     }
 
     @PostMapping("/{userId}/delete")
     public ApiResponseDto<Void> deleteUser(
             @PathVariable Long userId,
-            @RequestBody Map<String,String> request) {
-        userService.deleteUser(userId, request.get("password"));
+            HttpServletRequest httpServletRequest) {
+        Long userIdBySession = getUserIdBySession(httpServletRequest);
+        userService.deleteUser(userId, userIdBySession);
         return ApiResponseDto.OK("id " + userId + " 회원 탈퇴");
+    }
+
+    private Long getUserIdBySession(HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession(false);
+        return (Long) session.getAttribute("userId");
     }
 }

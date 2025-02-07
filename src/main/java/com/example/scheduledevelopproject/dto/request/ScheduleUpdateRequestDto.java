@@ -18,7 +18,4 @@ public class ScheduleUpdateRequestDto {
     private final String todoTitle;
     private final String todoContents;
 
-    @NotBlank(message = "비밀번호는 필수 입력값 입니다.")
-    private final String password;
-
 }

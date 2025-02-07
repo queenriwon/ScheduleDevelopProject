@@ -9,6 +9,7 @@ import com.example.scheduledevelopproject.dto.response.UserResponseDto;
 import com.example.scheduledevelopproject.entity.Users;
 import com.example.scheduledevelopproject.exception.custom.NoMatchPasswordConfirmation;
 import com.example.scheduledevelopproject.exception.custom.PasswordMismatchException;
+import com.example.scheduledevelopproject.exception.custom.UnauthorizedUserAccessException;
 import com.example.scheduledevelopproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,11 +60,11 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDto updateUsername(Long id, UserUpdateNameRequestDto dto) {
+    public UserResponseDto updateUsername(Long id, Long userIdBySession, UserUpdateNameRequestDto dto) {
         Users findUser = userRepository.findUsersByIdOrElseThrow(id);
 
-        if (!PasswordEncoder.matches(dto.getPassword(), findUser.getPassword())) {
-            throw new PasswordMismatchException("비밀번호 불일치");
+        if (!Objects.equals(userIdBySession, findUser.getId())) {
+            throw new UnauthorizedUserAccessException("유저 수정 권한 없음");
         }
 
         findUser.updateUsers(dto.getName());
@@ -70,27 +72,31 @@ public class UserService {
     }
 
     @Transactional
-    public void updatePassword(Long id, UserUpdatePasswordRequestDto dto) {
+    public void updatePassword(Long id, Long userIdBySession, UserUpdatePasswordRequestDto dto) {
         if (!dto.getNewPassword().equals(dto.getNewPasswordCheck())) {
             throw new NoMatchPasswordConfirmation("유저 비밀번호 확인 불일치");
         }
 
         Users findUser = userRepository.findUsersByIdOrElseThrow(id);
 
-        if (!PasswordEncoder.matches(dto.getOldPassword(), findUser.getPassword())) {
-            throw new PasswordMismatchException("비밀번호 불일치");
+        if (!Objects.equals(userIdBySession, findUser.getId())) {
+            throw new UnauthorizedUserAccessException("유저 수정 권한 없음");
         }
 
         findUser.updatePassword(PasswordEncoder.encode(dto.getNewPassword()));
     }
 
     @Transactional
-    public void deleteUser(Long id, String password) {
+    public void deleteUser(Long id, Long userIdBySession) {
         Users findUser = userRepository.findUsersByIdOrElseThrow(id);
 
-        if (!PasswordEncoder.matches(password, findUser.getPassword())) {
-            throw new PasswordMismatchException("비밀번호 불일치");
+        if (!Objects.equals(userIdBySession, findUser.getId())) {
+            throw new UnauthorizedUserAccessException("유저 수정 권한 없음");
         }
         userRepository.delete(findUser);
+    }
+
+    public Users findUsersByIdOrElseThrow(Long userId) {
+        return userRepository.findUsersByIdOrElseThrow(userId);
     }
 }

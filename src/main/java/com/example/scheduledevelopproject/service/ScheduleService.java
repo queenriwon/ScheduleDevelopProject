@@ -8,6 +8,7 @@ import com.example.scheduledevelopproject.entity.Schedules;
 import com.example.scheduledevelopproject.entity.Users;
 import com.example.scheduledevelopproject.exception.custom.InvalidScheduleUpdateRequestException;
 import com.example.scheduledevelopproject.exception.custom.PasswordMismatchException;
+import com.example.scheduledevelopproject.exception.custom.UnauthorizedScheduleAccessException;
 import com.example.scheduledevelopproject.repository.ScheduleRepository;
 import com.example.scheduledevelopproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,17 +16,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ScheduleRepository scheduleRepository;
 
-    public ScheduleResponseDto createSchedule(ScheduleCreateRequestDto dto) {
-        Users findUser = userRepository.findUsersByIdOrElseThrow(dto.getUserId());
+    public ScheduleResponseDto createSchedule(Long userId, ScheduleCreateRequestDto dto) {
+        Users findUser = userService.findUsersByIdOrElseThrow(userId);
 
         Schedules schedules = new Schedules(dto);
         schedules.setUsers(findUser);
@@ -48,7 +50,7 @@ public class ScheduleService {
     }
 
     @Transactional
-    public ScheduleResponseDto updateSchedule(Long id, ScheduleUpdateRequestDto dto) {
+    public ScheduleResponseDto updateSchedule(Long id, Long userId, ScheduleUpdateRequestDto dto) {
         if (dto.getTodoTitle() == null && dto.getTodoContents() == null) {
             throw new InvalidScheduleUpdateRequestException("일정 제목, 내용 모두 받지 못함");
         }
@@ -56,8 +58,8 @@ public class ScheduleService {
         Schedules findSchedule = scheduleRepository.findSchedulesByIdOrElseThrow(id);
         Users findScheduleUsers = findSchedule.getUsers();
 
-        if (!PasswordEncoder.matches(dto.getPassword(), findScheduleUsers.getPassword())) {
-            throw new PasswordMismatchException("비밀번호 불일치");
+        if (!Objects.equals(userId, findScheduleUsers.getId())) {
+            throw new UnauthorizedScheduleAccessException("일정 수정 권한 없음");
         }
 
         if (dto.getTodoTitle() != null) {
@@ -71,13 +73,14 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void deleteSchedule(Long id, String password) {
+    public void deleteSchedule(Long id, Long userId, String password) {
         Schedules findSchedule = scheduleRepository.findSchedulesByIdOrElseThrow(id);
         Users findScheduleUsers = findSchedule.getUsers();
 
-        if (!PasswordEncoder.matches(password, findScheduleUsers.getPassword())) {
-            throw new PasswordMismatchException("비밀번호 불일치");
+        if (!Objects.equals(userId, findScheduleUsers.getId())) {
+            throw new UnauthorizedScheduleAccessException("일정 수정 권한 없음");
         }
+
         scheduleRepository.deleteById(id);
     }
 }

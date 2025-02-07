@@ -30,4 +30,11 @@ public class ScheduleController {
         List<ScheduleResponseDto> scheduleResponseDtoList = scheduleService.findAllSchedule();
         return ApiResponseDto.OK(scheduleResponseDtoList, "일정 전체 조회 성공");
     }
+
+    @GetMapping("/{id}")
+    public ApiResponseDto<ScheduleResponseDto> findScheduleById(@PathVariable Long id) {
+        ScheduleResponseDto scheduleResponseDto = scheduleService.findScheduleById(id);
+        return ApiResponseDto.OK(scheduleResponseDto, "id " + id + " 일정 조회 성공");
+    }
+
 }

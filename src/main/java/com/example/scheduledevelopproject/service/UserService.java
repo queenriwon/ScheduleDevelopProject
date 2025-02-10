@@ -13,6 +13,9 @@ import com.example.scheduledevelopproject.exception.custom.UnauthorizedUserAcces
 import com.example.scheduledevelopproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,9 +53,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponseDto> findAllUser() {
-        List<Users> allUsers = userRepository.findAll();
-        return allUsers.stream().map(UserResponseDto::new).toList();
+    public Page<UserResponseDto> findAllUser(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Users> usersPage = userRepository.findAllByOrderByModifiedAtDesc(pageable);
+        return usersPage.map(UserResponseDto::new);
     }
 
     @Transactional(readOnly = true)

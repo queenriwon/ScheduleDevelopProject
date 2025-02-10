@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,9 +36,12 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ApiResponseDto<List<ScheduleResponseDto>> findAllSchedule() {
-        List<ScheduleResponseDto> scheduleResponseDtoList = scheduleService.findAllSchedule();
-        return ApiResponseDto.OK(scheduleResponseDtoList, "일정 전체 조회 성공");
+    public ApiResponseDto<Page<ScheduleResponseDto>> findAllSchedule(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<ScheduleResponseDto> allSchedule = scheduleService.findAllSchedule(page, size);
+        return ApiResponseDto.OK(allSchedule, "일정 전체 조회 성공");
     }
 
     @GetMapping("/{id}")

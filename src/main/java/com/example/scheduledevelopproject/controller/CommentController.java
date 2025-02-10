@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,9 +34,13 @@ public class CommentController {
     }
 
     @GetMapping("/{scheduleId}/comments")
-    public ApiResponseDto<List<CommentResponseDto>> findAllComment(@PathVariable Long scheduleId) {
-        List<CommentResponseDto> commentResponseDtoList = commentService.findAllComment(scheduleId);
-        return ApiResponseDto.OK(commentResponseDtoList, scheduleId + " 일정 댓글 조회");
+    public ApiResponseDto<Page<CommentResponseDto>> findAllComment(
+            @PathVariable Long scheduleId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<CommentResponseDto> allComment = commentService.findAllComment(scheduleId, page, size);
+        return ApiResponseDto.OK(allComment, scheduleId + " 일정 댓글 조회");
     }
 
     @PatchMapping("/{scheduleId}/comments/{commentId}")

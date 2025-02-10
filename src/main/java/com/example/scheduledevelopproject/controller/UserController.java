@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,9 +32,12 @@ public class UserController {
     }
 
     @GetMapping
-    public ApiResponseDto<List<UserResponseDto>> findAllUser() {
-        List<UserResponseDto> userResponseDtoList = userService.findAllUser();
-        return ApiResponseDto.OK(userResponseDtoList, "유저 전체 조회 성공");
+    public ApiResponseDto<Page<UserResponseDto>> findAllUser(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<UserResponseDto> allUser = userService.findAllUser(page, size);
+        return ApiResponseDto.OK(allUser, "유저 전체 조회 성공");
     }
 
     @GetMapping("/{userId}")

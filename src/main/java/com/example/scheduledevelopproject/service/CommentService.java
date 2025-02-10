@@ -11,6 +11,9 @@ import com.example.scheduledevelopproject.exception.custom.UnauthorizedCommentAc
 import com.example.scheduledevelopproject.exception.custom.UnauthorizedScheduleAccessException;
 import com.example.scheduledevelopproject.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,10 +39,13 @@ public class CommentService {
         return new CommentResponseDto(saveComment);
     }
 
-    public List<CommentResponseDto> findAllComment(Long scheduleId) {
+    public Page<CommentResponseDto> findAllComment(Long scheduleId, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
         Schedules findSchedule = scheduleService.findSchedulesByIdOrElseThrow(scheduleId);
-        List<Comments> commentsList = commentRepository.findCommentsBySchedules_Id(findSchedule.getId());
-        return commentsList.stream().map(CommentResponseDto::new).toList();
+        Page<Comments> commentsPage = commentRepository.findCommentsBySchedules_IdOrderByModifiedAtDesc(findSchedule.getId(), pageable);
+        return commentsPage.map(CommentResponseDto::new);
     }
 
     public CommentResponseDto updateComment(Long commentId, Long userId, CommentRequestDto dto) {

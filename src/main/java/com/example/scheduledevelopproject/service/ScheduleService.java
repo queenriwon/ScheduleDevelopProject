@@ -13,6 +13,9 @@ import com.example.scheduledevelopproject.exception.custom.UnauthorizedScheduleA
 import com.example.scheduledevelopproject.repository.ScheduleRepository;
 import com.example.scheduledevelopproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,9 +42,11 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public List<ScheduleResponseDto> findAllSchedule() {
-        List<Schedules> allSchedule = scheduleRepository.findAll();
-        return allSchedule.stream().map(ScheduleResponseDto::new).toList();
+    public Page<ScheduleResponseDto> findAllSchedule(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Schedules> schedulesPage = scheduleRepository.findAllByOrderByModifiedAtDesc(pageable);
+        return schedulesPage.map(ScheduleResponseDto::new);
     }
 
     @Transactional(readOnly = true)

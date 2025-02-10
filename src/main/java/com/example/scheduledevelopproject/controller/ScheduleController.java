@@ -3,6 +3,7 @@ package com.example.scheduledevelopproject.controller;
 import com.example.scheduledevelopproject.dto.request.ScheduleCreateRequestDto;
 import com.example.scheduledevelopproject.dto.request.ScheduleUpdateRequestDto;
 import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
+import com.example.scheduledevelopproject.dto.response.PageResponseDto;
 import com.example.scheduledevelopproject.dto.response.ScheduleResponseDto;
 import com.example.scheduledevelopproject.entity.Schedules;
 import com.example.scheduledevelopproject.service.ScheduleService;
@@ -36,11 +37,11 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ApiResponseDto<Page<ScheduleResponseDto>> findAllSchedule(
+    public ApiResponseDto<PageResponseDto<ScheduleResponseDto>> findAllSchedule(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<ScheduleResponseDto> allSchedule = scheduleService.findAllSchedule(page, size);
+        PageResponseDto<ScheduleResponseDto> allSchedule = scheduleService.findAllSchedule(page, size);
         return ApiResponseDto.OK(allSchedule, "일정 전체 조회 성공");
     }
 

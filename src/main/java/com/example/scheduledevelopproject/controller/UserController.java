@@ -4,6 +4,7 @@ import com.example.scheduledevelopproject.dto.request.UserSignUpRequestDto;
 import com.example.scheduledevelopproject.dto.request.UserUpdateNameRequestDto;
 import com.example.scheduledevelopproject.dto.request.UserUpdatePasswordRequestDto;
 import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
+import com.example.scheduledevelopproject.dto.response.PageResponseDto;
 import com.example.scheduledevelopproject.dto.response.UserResponseDto;
 import com.example.scheduledevelopproject.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,11 +33,11 @@ public class UserController {
     }
 
     @GetMapping
-    public ApiResponseDto<Page<UserResponseDto>> findAllUser(
+    public ApiResponseDto<PageResponseDto<UserResponseDto>> findAllUser(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<UserResponseDto> allUser = userService.findAllUser(page, size);
+        PageResponseDto<UserResponseDto> allUser = userService.findAllUser(page, size);
         return ApiResponseDto.OK(allUser, "유저 전체 조회 성공");
     }
 

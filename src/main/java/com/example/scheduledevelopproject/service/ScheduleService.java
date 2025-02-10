@@ -3,6 +3,7 @@ package com.example.scheduledevelopproject.service;
 import com.example.scheduledevelopproject.config.PasswordEncoder;
 import com.example.scheduledevelopproject.dto.request.ScheduleCreateRequestDto;
 import com.example.scheduledevelopproject.dto.request.ScheduleUpdateRequestDto;
+import com.example.scheduledevelopproject.dto.response.PageResponseDto;
 import com.example.scheduledevelopproject.dto.response.ScheduleResponseDto;
 import com.example.scheduledevelopproject.entity.Schedules;
 import com.example.scheduledevelopproject.entity.Users;
@@ -42,11 +43,12 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ScheduleResponseDto> findAllSchedule(int page, int size) {
+    public PageResponseDto<ScheduleResponseDto> findAllSchedule(int page, int size) {
 
         Pageable pageable = PageRequest.of(page,size);
         Page<Schedules> schedulesPage = scheduleRepository.findAllByOrderByModifiedAtDesc(pageable);
-        return schedulesPage.map(ScheduleResponseDto::new);
+        Page<ScheduleResponseDto> scheduleResponseDtoPage = schedulesPage.map(ScheduleResponseDto::new);
+        return new PageResponseDto<>(scheduleResponseDtoPage);
     }
 
     @Transactional(readOnly = true)

@@ -5,6 +5,7 @@ import com.example.scheduledevelopproject.dto.request.LoginRequestDto;
 import com.example.scheduledevelopproject.dto.request.UserSignUpRequestDto;
 import com.example.scheduledevelopproject.dto.request.UserUpdateNameRequestDto;
 import com.example.scheduledevelopproject.dto.request.UserUpdatePasswordRequestDto;
+import com.example.scheduledevelopproject.dto.response.PageResponseDto;
 import com.example.scheduledevelopproject.dto.response.UserResponseDto;
 import com.example.scheduledevelopproject.entity.Users;
 import com.example.scheduledevelopproject.exception.custom.NoMatchPasswordConfirmation;
@@ -19,9 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,10 +52,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserResponseDto> findAllUser(int page, int size) {
+    public PageResponseDto<UserResponseDto> findAllUser(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Users> usersPage = userRepository.findAllByOrderByModifiedAtDesc(pageable);
-        return usersPage.map(UserResponseDto::new);
+        Page<UserResponseDto> userResponseDtoPage = usersPage.map(UserResponseDto::new);
+        return new PageResponseDto<>(userResponseDtoPage);
     }
 
     @Transactional(readOnly = true)

@@ -2,6 +2,7 @@ package com.example.scheduledevelopproject.service;
 
 import com.example.scheduledevelopproject.dto.request.CommentRequestDto;
 import com.example.scheduledevelopproject.dto.response.CommentResponseDto;
+import com.example.scheduledevelopproject.dto.response.PageResponseDto;
 import com.example.scheduledevelopproject.entity.Comments;
 import com.example.scheduledevelopproject.entity.Schedules;
 import com.example.scheduledevelopproject.entity.Users;
@@ -39,13 +40,14 @@ public class CommentService {
         return new CommentResponseDto(saveComment);
     }
 
-    public Page<CommentResponseDto> findAllComment(Long scheduleId, int page, int size) {
+    public PageResponseDto<CommentResponseDto> findAllComment(Long scheduleId, int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size);
 
         Schedules findSchedule = scheduleService.findSchedulesByIdOrElseThrow(scheduleId);
         Page<Comments> commentsPage = commentRepository.findCommentsBySchedules_IdOrderByModifiedAtDesc(findSchedule.getId(), pageable);
-        return commentsPage.map(CommentResponseDto::new);
+        Page<CommentResponseDto> commentResponseDtoPage = commentsPage.map(CommentResponseDto::new);
+        return new PageResponseDto<>(commentResponseDtoPage);
     }
 
     public CommentResponseDto updateComment(Long commentId, Long userId, CommentRequestDto dto) {

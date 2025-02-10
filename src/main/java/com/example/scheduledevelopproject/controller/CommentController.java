@@ -4,6 +4,7 @@ package com.example.scheduledevelopproject.controller;
 import com.example.scheduledevelopproject.dto.request.CommentRequestDto;
 import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
 import com.example.scheduledevelopproject.dto.response.CommentResponseDto;
+import com.example.scheduledevelopproject.dto.response.PageResponseDto;
 import com.example.scheduledevelopproject.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -34,12 +35,12 @@ public class CommentController {
     }
 
     @GetMapping("/{scheduleId}/comments")
-    public ApiResponseDto<Page<CommentResponseDto>> findAllComment(
+    public ApiResponseDto<PageResponseDto<CommentResponseDto>> findAllComment(
             @PathVariable Long scheduleId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<CommentResponseDto> allComment = commentService.findAllComment(scheduleId, page, size);
+        PageResponseDto<CommentResponseDto> allComment = commentService.findAllComment(scheduleId, page, size);
         return ApiResponseDto.OK(allComment, scheduleId + " 일정 댓글 조회");
     }
 

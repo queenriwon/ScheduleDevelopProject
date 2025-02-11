@@ -24,29 +24,29 @@ public class LoginController {
             @RequestBody LoginRequestDto dto,
             HttpServletRequest httpServletRequest
     ) {
-        HttpSession session = httpServletRequest.getSession(false); // 없을시 null 반환(실패한 적이 있다면 세션이 있을수도)
+        HttpSession session = httpServletRequest.getSession(false);
         if (session == null) {
-            session = httpServletRequest.getSession(true);  // 없을경우 있게 만들어줌
+            session = httpServletRequest.getSession(true);
         }
 
         Users loginUser = userService.login(dto);
-            if (loginUser != null) {
-                log.info("로그인 성공 유저(id, name, email) = {}, {}, {}",
-                        loginUser.getId(),
-                        loginUser.getName(),
-                        loginUser.getEmail());
-                session.setAttribute("userId", loginUser.getId());
-                session.setMaxInactiveInterval(1800); //30분
+        if (loginUser != null) {
+            log.info("로그인 성공 유저(id, name, email) = {}, {}, {}",
+                    loginUser.getId(),
+                    loginUser.getName(),
+                    loginUser.getEmail());
+            session.setAttribute("userId", loginUser.getId());
+            session.setMaxInactiveInterval(1800); //30분
 
-                return ApiResponseDto.OK("로그인 성공");
-            }
-            return ApiResponseDto.fail(ErrorCode.LOGIN_UNAUTHORIZED); // Todo: postMan에서 401에러 뜨게하기
+            return ApiResponseDto.OK("로그인 성공");
+        }
+        return ApiResponseDto.fail(ErrorCode.LOGIN_UNAUTHORIZED); // Todo: postMan에서 401에러 뜨게하기
     }
 
     @GetMapping("/logout")
     public ApiResponseDto<Void> logoutUser(HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession(false);  // Session이 없으면 null return
-        if(session != null) {
+        if (session != null) {
             session.invalidate();
         }
         return ApiResponseDto.OK("로그아웃 성공");

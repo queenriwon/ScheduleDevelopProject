@@ -8,8 +8,9 @@ import lombok.Getter;
 /*
     “todoTitle”: “todoTitleValue”,
     “todoContents”: “todoContentsValue”,
-    "password": "passwordValue"
  */
+// ScheduleCreateRequestDto와 다른 유효성 사용
+
 @Getter
 @AllArgsConstructor
 public class ScheduleUpdateRequestDto {

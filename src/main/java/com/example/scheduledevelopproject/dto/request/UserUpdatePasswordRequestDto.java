@@ -20,6 +20,7 @@ public class UserUpdatePasswordRequestDto {
 
     @NotBlank(message = "새 비밀번호는 필수 입력값 입니다.")
     private final String newPassword;
-    private final String newPasswordCheck;
 
+    @NotBlank(message = "새 비밀번호 확인은 필수 입력값 입니다.")
+    private final String newPasswordCheck;
 }

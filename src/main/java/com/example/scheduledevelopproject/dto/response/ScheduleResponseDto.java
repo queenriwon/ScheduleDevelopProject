@@ -17,6 +17,7 @@ public class ScheduleResponseDto {
     private String name;
     private String todoTitle;
     private String todoContents;
+    private int commentCount;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
@@ -29,6 +30,7 @@ public class ScheduleResponseDto {
         this.name = schedules.getUsers().getName();
         this.todoTitle = schedules.getTodoTitle();
         this.todoContents = schedules.getTodoContents();
+        this.commentCount = schedules.getComments().size();
         this.createdAt = schedules.getCreatedAt();
         this.modifiedAt = schedules.getModifiedAt();
     }

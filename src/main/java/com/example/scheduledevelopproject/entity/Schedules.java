@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Table(name = "schedules")
@@ -20,6 +23,9 @@ public class Schedules extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Users users;
+
+    @OneToMany(mappedBy = "schedules", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comments> comments = new ArrayList<>();
 
     @Column(nullable = false)
     private String todoTitle;

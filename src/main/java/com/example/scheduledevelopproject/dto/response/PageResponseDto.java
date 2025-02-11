@@ -35,5 +35,4 @@ public class PageResponseDto<T> {
         this.totalElements = page.getTotalElements();
         this.numberOfElements = page.getNumberOfElements();
     }
-
 }

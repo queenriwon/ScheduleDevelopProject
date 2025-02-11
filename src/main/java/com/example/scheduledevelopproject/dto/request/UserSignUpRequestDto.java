@@ -28,5 +28,7 @@ public class UserSignUpRequestDto {
 
     @NotBlank(message = "비밀번호는 필수 입력값 입니다.")
     private final String password;
+
+    @NotBlank(message = "비밀번호 확인은 필수 입력값 입니다.")
     private final String passwordCheck;
 }

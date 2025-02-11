@@ -26,7 +26,7 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    @PostMapping("/post")
+    @PostMapping
     public ApiResponseDto<ScheduleResponseDto> createSchedule(
             @Valid @RequestBody ScheduleCreateRequestDto dto,
             HttpServletRequest httpServletRequest
@@ -62,14 +62,13 @@ public class ScheduleController {
         return ApiResponseDto.OK(scheduleResponseDto, "id " + id + " 일정 수정 성공");
     }
 
-    @PostMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     public ApiResponseDto<Void> deleteSchedule(
             @PathVariable Long id,
-            @RequestBody Map<String, String> request,
             HttpServletRequest httpServletRequest
     ) {
         Long userId = getUserIdBySession(httpServletRequest);
-        scheduleService.deleteSchedule(id, userId, request.get("password"));
+        scheduleService.deleteSchedule(id, userId);
         return ApiResponseDto.OK("id " + id + " 일정 삭제");
     }
 

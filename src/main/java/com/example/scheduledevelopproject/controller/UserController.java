@@ -72,9 +72,10 @@ public class UserController {
     @PostMapping("/{userId}/delete")
     public ApiResponseDto<Void> deleteUser(
             @PathVariable Long userId,
+            @RequestBody Map<String, String> password,
             HttpServletRequest httpServletRequest) {
         Long userIdBySession = getUserIdBySession(httpServletRequest);
-        userService.deleteUser(userId, userIdBySession);
+        userService.deleteUser(userId, userIdBySession, password.get("password"));
         return ApiResponseDto.OK("id " + userId + " 회원 탈퇴");
     }
 

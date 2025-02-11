@@ -8,6 +8,7 @@ import com.example.scheduledevelopproject.dto.response.PageResponseDto;
 import com.example.scheduledevelopproject.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,7 @@ public class CommentController {
     @PostMapping("/{scheduleId}/comments")
     public ApiResponseDto<CommentResponseDto> createComment(
             @PathVariable Long scheduleId,
-            @RequestBody CommentRequestDto dto,
+            @Valid @RequestBody CommentRequestDto dto,
             HttpServletRequest httpServletRequest
     ) {
         Long userId = getUserIdBySession(httpServletRequest);
@@ -48,7 +49,7 @@ public class CommentController {
     public ApiResponseDto<CommentResponseDto> updateComment(
             @PathVariable Long scheduleId,
             @PathVariable Long commentId,
-            @RequestBody CommentRequestDto dto,
+            @Valid @RequestBody CommentRequestDto dto,
             HttpServletRequest httpServletRequest
     ) {
         Long userId = getUserIdBySession(httpServletRequest);

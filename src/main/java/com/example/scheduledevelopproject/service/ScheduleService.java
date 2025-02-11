@@ -82,7 +82,7 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void deleteSchedule(Long id, Long userId, String password) {
+    public void deleteSchedule(Long id, Long userId) {
         Schedules findSchedule = findSchedulesByIdOrElseThrow(id);
         Users findScheduleUsers = findSchedule.getUsers();
 

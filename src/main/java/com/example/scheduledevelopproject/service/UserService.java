@@ -93,11 +93,14 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(Long id, Long userIdBySession) {
+    public void deleteUser(Long id, Long userIdBySession, String password) {
         Users findUser = userRepository.findUsersByIdOrElseThrow(id);
 
         if (!Objects.equals(userIdBySession, findUser.getId())) {
             throw new UnauthorizedUserAccessException("유저 수정 권한 없음");
+        }
+        if (!PasswordEncoder.matches(password, findUser.getPassword())) {
+            throw new NoMatchPasswordConfirmation("비밀번호 불일치");
         }
         userRepository.delete(findUser);
     }

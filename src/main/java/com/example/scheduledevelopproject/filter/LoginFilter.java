@@ -21,11 +21,18 @@ public class LoginFilter implements Filter {
             FilterChain filterChain) throws IOException, ServletException {
 
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-        String responseURI = httpRequest.getRequestURI();
+        String requestURI = httpRequest.getRequestURI();
 
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
-        if (!isWhiteList(responseURI)) {
+        System.out.println(requestURI);
+
+        if (requestURI.contains("/swagger-ui/") || requestURI.contains("/v3/api-docs")) {
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
+
+        if (!isWhiteList(requestURI)) {
             HttpSession session = httpRequest.getSession(false);
 
             // Todo: 에러처리를 따로 해줘야됨

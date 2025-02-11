@@ -1,18 +1,18 @@
 package com.example.scheduledevelopproject.filter;
 
+import com.example.scheduledevelopproject.annotation.LoginRequired;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.PatternMatchUtils;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerMapping;
 
 import java.io.IOException;
 
 @Slf4j
 public class LoginFilter implements Filter {
-
-    private static final String[] WHITE_LIST = {"/", "/users/signup", "/login", "/logout"};
 
     @Override
     public void doFilter(
@@ -32,7 +32,7 @@ public class LoginFilter implements Filter {
             return;
         }
 
-        if (!isWhiteList(requestURI)) {
+        if (isLoginRequired(httpRequest)) {
             HttpSession session = httpRequest.getSession(false);
 
             // Todo: 에러처리를 따로 해줘야됨
@@ -47,7 +47,11 @@ public class LoginFilter implements Filter {
 
     }
 
-    private boolean isWhiteList(String requestURI) {
-        return PatternMatchUtils.simpleMatch(WHITE_LIST, requestURI);
+    private boolean isLoginRequired(HttpServletRequest httpServletRequest) {
+        HandlerMethod handlerMethod = (HandlerMethod) httpServletRequest.getAttribute(HandlerMapping.BEST_MATCHING_HANDLER_ATTRIBUTE);
+        if (handlerMethod != null) {
+            return handlerMethod.hasMethodAnnotation(LoginRequired.class);
+        }
+        return false;
     }
 }

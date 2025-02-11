@@ -1,5 +1,6 @@
 package com.example.scheduledevelopproject.controller;
 
+import com.example.scheduledevelopproject.annotation.LoginRequired;
 import com.example.scheduledevelopproject.annotation.SessionUser;
 import com.example.scheduledevelopproject.dto.request.ScheduleCreateRequestDto;
 import com.example.scheduledevelopproject.dto.request.ScheduleUpdateRequestDto;
@@ -21,6 +22,7 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
+    @LoginRequired
     @PostMapping
     public ApiResponseDto<ScheduleResponseDto> createSchedule(
             @Valid @RequestBody ScheduleCreateRequestDto dto,
@@ -45,6 +47,7 @@ public class ScheduleController {
         return ApiResponseDto.OK(scheduleResponseDto, "id " + id + " 일정 조회 성공");
     }
 
+    @LoginRequired
     @PatchMapping("/{id}")
     public ApiResponseDto<ScheduleResponseDto> updateSchedule(
             @PathVariable Long id,
@@ -55,6 +58,7 @@ public class ScheduleController {
         return ApiResponseDto.OK(scheduleResponseDto, "id " + id + " 일정 수정 성공");
     }
 
+    @LoginRequired
     @DeleteMapping("/{id}")
     public ApiResponseDto<Void> deleteSchedule(
             @PathVariable Long id,

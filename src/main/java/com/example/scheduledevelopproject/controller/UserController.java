@@ -1,5 +1,6 @@
 package com.example.scheduledevelopproject.controller;
 
+import com.example.scheduledevelopproject.annotation.LoginRequired;
 import com.example.scheduledevelopproject.annotation.SessionUser;
 import com.example.scheduledevelopproject.dto.SessionUserDto;
 import com.example.scheduledevelopproject.dto.request.UserSignUpRequestDto;
@@ -24,12 +25,14 @@ public class UserController {
 
     private final UserService userService;
 
+    @LoginRequired
     @PostMapping("/signup")
     public ApiResponseDto<UserResponseDto> signUpUser(@Valid @RequestBody UserSignUpRequestDto dto) {
         UserResponseDto userResponseDto = userService.signUpUser(dto);
         return ApiResponseDto.OK(userResponseDto, "회원가입 성공");
     }
 
+    @LoginRequired
     @GetMapping
     public ApiResponseDto<PageResponseDto<UserResponseDto>> findAllUser(
             @RequestParam(defaultValue = "0") int page,
@@ -39,12 +42,14 @@ public class UserController {
         return ApiResponseDto.OK(allUser, "유저 전체 조회 성공");
     }
 
+    @LoginRequired
     @GetMapping("/{userId}")
     public ApiResponseDto<UserResponseDto> findUserById(@PathVariable Long userId) {
         UserResponseDto userResponseDto = userService.findUserById(userId);
         return ApiResponseDto.OK(userResponseDto, "id " + userId + " 유저 조회 성공");
     }
 
+    @LoginRequired
     @PatchMapping("/{userId}/name")
     public ApiResponseDto<UserResponseDto> updateUsername(
             @PathVariable Long userId,
@@ -55,6 +60,7 @@ public class UserController {
         return ApiResponseDto.OK(userResponseDto, "id " + userId + " 유저이름 수정 성공");
     }
 
+    @LoginRequired
     @PatchMapping("/{userId}/password")
     public ApiResponseDto<Void> updatePassword(
             @PathVariable Long userId,
@@ -65,6 +71,7 @@ public class UserController {
         return ApiResponseDto.OK("id " + userId + " 비밀번호 수정 성공");
     }
 
+    @LoginRequired
     @PostMapping("/{userId}/delete")
     public ApiResponseDto<Void> deleteUser(
             @PathVariable Long userId,

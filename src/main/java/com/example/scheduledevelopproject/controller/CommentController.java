@@ -1,6 +1,7 @@
 package com.example.scheduledevelopproject.controller;
 
 
+import com.example.scheduledevelopproject.annotation.LoginRequired;
 import com.example.scheduledevelopproject.annotation.SessionUser;
 import com.example.scheduledevelopproject.dto.request.CommentRequestDto;
 import com.example.scheduledevelopproject.dto.SessionUserDto;
@@ -21,6 +22,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    @LoginRequired
     @PostMapping("/{scheduleId}/comments")
     public ApiResponseDto<CommentResponseDto> createComment(
             @PathVariable Long scheduleId,
@@ -41,6 +43,7 @@ public class CommentController {
         return ApiResponseDto.OK(allComment, scheduleId + " 일정 댓글 조회");
     }
 
+    @LoginRequired
     @PatchMapping("/{scheduleId}/comments/{commentId}")
     public ApiResponseDto<CommentResponseDto> updateComment(
             @PathVariable Long scheduleId,
@@ -52,6 +55,7 @@ public class CommentController {
         return ApiResponseDto.OK(commentResponseDto,scheduleId + " 일정 댓글 수정");
     }
 
+    @LoginRequired
     @DeleteMapping("/{scheduleId}/comments/{commentId}")
     public ApiResponseDto<Void> deleteComment(
             @PathVariable Long scheduleId,

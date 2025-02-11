@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -41,7 +42,7 @@ public class LoginController {
 
             return ApiResponseDto.OK("로그인 성공");
         }
-        return ApiResponseDto.fail(ErrorCode.LOGIN_UNAUTHORIZED); // Todo: postMan에서 401에러 뜨게하기
+        return ApiResponseDto.fail(HttpStatus.UNAUTHORIZED, "로그인 실패");
     }
 
     @GetMapping("/logout")

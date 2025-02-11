@@ -1,8 +1,10 @@
 package com.example.scheduledevelopproject.dto.response;
 
 import com.example.scheduledevelopproject.exception.ErrorCode;
+import com.example.scheduledevelopproject.exception.custom.BaseException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
@@ -12,21 +14,31 @@ public class ApiResponseDto<T> {
     private T data;
     private String errorDetails;
 
-    public ApiResponseDto(int statusCode, String message, T data) {
-        this.statusCode = statusCode;
+    public ApiResponseDto(HttpStatus statusCode, String message, T data) {
+        this.statusCode = statusCode.value();
         this.message = message;
         this.data = data;
     }
 
     public static <T> ApiResponseDto<T> OK(T data, String message) {
-        return new ApiResponseDto<>(200, message, data);
+        return new ApiResponseDto<>(HttpStatus.OK, message, data);
     }
 
     public static <T> ApiResponseDto<T> OK(String message) {
-        return new ApiResponseDto<>(200, message, null, null);
+        return new ApiResponseDto<>(HttpStatus.OK.value(), message, null, null);
     }
 
-    public static <T> ApiResponseDto<T> fail(ErrorCode errorCode) {
-        return new ApiResponseDto<>(errorCode.getErrorCode(), errorCode.name(), null, errorCode.getErrorDetails());
+    public static <T> ApiResponseDto<T> fail(BaseException ex) {
+        return new ApiResponseDto<>(ex.getHttpStatus().value(),
+                ex.getHttpStatus().name(),
+                null,
+                ex.getMessage());
+    }
+
+    public static <T> ApiResponseDto<T> fail(HttpStatus httpStatus, String errorDetails) {
+        return new ApiResponseDto<>(httpStatus.value(),
+                httpStatus.name(),
+                null,
+                errorDetails);
     }
 }

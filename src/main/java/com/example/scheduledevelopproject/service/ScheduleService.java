@@ -68,7 +68,7 @@ public class ScheduleService {
         Users findScheduleUsers = findSchedule.getUsers();
 
         if (!Objects.equals(userId, findScheduleUsers.getId())) {
-            throw new UnauthorizedScheduleAccessException("일정 수정 권한 없음");
+            throw new UnauthorizedScheduleAccessException("일정 수정 - 해당 로그인 회원이 수정할 수 없는 일정");
         }
 
         if (dto.getTodoTitle() != null) {

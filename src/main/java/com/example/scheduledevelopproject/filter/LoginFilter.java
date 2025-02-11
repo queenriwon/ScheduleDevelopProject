@@ -39,12 +39,9 @@ public class LoginFilter implements Filter {
             if (session == null || session.getAttribute("user") == null) {
                 throw new RuntimeException("로그인을 해야 이용할 수 있습니다.");
             }
-
             log.info("로그인된 사용자 = {}", session.getAttribute("user"));
         }
-
         filterChain.doFilter(servletRequest, servletResponse);
-
     }
 
     private boolean isLoginRequired(HttpServletRequest httpServletRequest) {

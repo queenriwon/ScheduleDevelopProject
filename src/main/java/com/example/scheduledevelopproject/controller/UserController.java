@@ -1,5 +1,7 @@
 package com.example.scheduledevelopproject.controller;
 
+import com.example.scheduledevelopproject.annotation.SessionUser;
+import com.example.scheduledevelopproject.dto.request.UserSessionDto;
 import com.example.scheduledevelopproject.dto.request.UserSignUpRequestDto;
 import com.example.scheduledevelopproject.dto.request.UserUpdateNameRequestDto;
 import com.example.scheduledevelopproject.dto.request.UserUpdatePasswordRequestDto;
@@ -7,15 +9,11 @@ import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
 import com.example.scheduledevelopproject.dto.response.PageResponseDto;
 import com.example.scheduledevelopproject.dto.response.UserResponseDto;
 import com.example.scheduledevelopproject.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -27,7 +25,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ApiResponseDto<UserResponseDto> signUpUser(@Valid  @RequestBody UserSignUpRequestDto dto) {
+    public ApiResponseDto<UserResponseDto> signUpUser(@Valid @RequestBody UserSignUpRequestDto dto) {
         UserResponseDto userResponseDto = userService.signUpUser(dto);
         return ApiResponseDto.OK(userResponseDto, "회원가입 성공");
     }
@@ -51,10 +49,9 @@ public class UserController {
     public ApiResponseDto<UserResponseDto> updateUsername(
             @PathVariable Long userId,
             @Valid @RequestBody UserUpdateNameRequestDto dto,
-            HttpServletRequest httpServletRequest
+            @SessionUser UserSessionDto userSession
     ) {
-        Long userIdBySession = getUserIdBySession(httpServletRequest);
-        UserResponseDto userResponseDto = userService.updateUsername(userId, userIdBySession, dto);
+        UserResponseDto userResponseDto = userService.updateUsername(userId, userSession.getId(), dto);
         return ApiResponseDto.OK(userResponseDto, "id " + userId + " 유저이름 수정 성공");
     }
 
@@ -62,10 +59,9 @@ public class UserController {
     public ApiResponseDto<Void> updatePassword(
             @PathVariable Long userId,
             @Valid @RequestBody UserUpdatePasswordRequestDto dto,
-            HttpServletRequest httpServletRequest
+            @SessionUser UserSessionDto userSession
     ) {
-        Long userIdBySession = getUserIdBySession(httpServletRequest);
-        userService.updatePassword(userId, userIdBySession, dto);
+        userService.updatePassword(userId, userSession.getId(), dto);
         return ApiResponseDto.OK("id " + userId + " 비밀번호 수정 성공");
     }
 
@@ -73,14 +69,9 @@ public class UserController {
     public ApiResponseDto<Void> deleteUser(
             @PathVariable Long userId,
             @RequestBody Map<String, String> password,
-            HttpServletRequest httpServletRequest) {
-        Long userIdBySession = getUserIdBySession(httpServletRequest);
-        userService.deleteUser(userId, userIdBySession, password.get("password"));
+            @SessionUser UserSessionDto userSession
+    ) {
+        userService.deleteUser(userId, userSession.getId(), password.get("password"));
         return ApiResponseDto.OK("id " + userId + " 회원 탈퇴");
-    }
-
-    private Long getUserIdBySession(HttpServletRequest httpServletRequest) {
-        HttpSession session = httpServletRequest.getSession(false);
-        return (Long) session.getAttribute("userId");
     }
 }

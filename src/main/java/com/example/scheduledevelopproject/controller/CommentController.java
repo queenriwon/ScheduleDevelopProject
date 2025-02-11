@@ -1,20 +1,17 @@
 package com.example.scheduledevelopproject.controller;
 
 
+import com.example.scheduledevelopproject.annotation.SessionUser;
 import com.example.scheduledevelopproject.dto.request.CommentRequestDto;
+import com.example.scheduledevelopproject.dto.request.UserSessionDto;
 import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
 import com.example.scheduledevelopproject.dto.response.CommentResponseDto;
 import com.example.scheduledevelopproject.dto.response.PageResponseDto;
 import com.example.scheduledevelopproject.service.CommentService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -28,10 +25,9 @@ public class CommentController {
     public ApiResponseDto<CommentResponseDto> createComment(
             @PathVariable Long scheduleId,
             @Valid @RequestBody CommentRequestDto dto,
-            HttpServletRequest httpServletRequest
+            @SessionUser UserSessionDto userSession
     ) {
-        Long userId = getUserIdBySession(httpServletRequest);
-        CommentResponseDto commentResponseDto = commentService.createComment(scheduleId, userId, dto);
+        CommentResponseDto commentResponseDto = commentService.createComment(scheduleId, userSession.getId(), dto);
         return ApiResponseDto.OK(commentResponseDto,scheduleId + " 일정 댓글 작성");
     }
 
@@ -50,10 +46,9 @@ public class CommentController {
             @PathVariable Long scheduleId,
             @PathVariable Long commentId,
             @Valid @RequestBody CommentRequestDto dto,
-            HttpServletRequest httpServletRequest
+            @SessionUser UserSessionDto userSession
     ) {
-        Long userId = getUserIdBySession(httpServletRequest);
-        CommentResponseDto commentResponseDto = commentService.updateComment(commentId, userId, dto);
+        CommentResponseDto commentResponseDto = commentService.updateComment(commentId, userSession.getId(), dto);
         return ApiResponseDto.OK(commentResponseDto,scheduleId + " 일정 댓글 수정");
     }
 
@@ -61,15 +56,9 @@ public class CommentController {
     public ApiResponseDto<Void> deleteComment(
             @PathVariable Long scheduleId,
             @PathVariable Long commentId,
-            HttpServletRequest httpServletRequest
+            @SessionUser UserSessionDto userSession
     ) {
-        Long userId = getUserIdBySession(httpServletRequest);
-        commentService.deleteComment(commentId, userId);
+        commentService.deleteComment(commentId, userSession.getId());
         return ApiResponseDto.OK(scheduleId + " 일정 댓글 삭제");
-    }
-
-    private Long getUserIdBySession(HttpServletRequest httpServletRequest) {
-        HttpSession session = httpServletRequest.getSession(false);
-        return (Long) session.getAttribute("userId");
     }
 }

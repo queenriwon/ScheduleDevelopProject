@@ -1,6 +1,5 @@
 package com.example.scheduledevelopproject.exception.custom;
 
-import com.example.scheduledevelopproject.exception.ErrorCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 

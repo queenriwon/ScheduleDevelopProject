@@ -8,9 +8,13 @@ import com.example.scheduledevelopproject.dto.request.UserUpdatePasswordRequestD
 import com.example.scheduledevelopproject.dto.response.PageResponseDto;
 import com.example.scheduledevelopproject.dto.response.UserResponseDto;
 import com.example.scheduledevelopproject.entity.Users;
-import com.example.scheduledevelopproject.exception.custom.NoMatchPasswordConfirmation;
-import com.example.scheduledevelopproject.exception.custom.PasswordMismatchException;
-import com.example.scheduledevelopproject.exception.custom.UnauthorizedUserAccessException;
+import com.example.scheduledevelopproject.exception.custom.notfound.NotFoundUserByEmailException;
+import com.example.scheduledevelopproject.exception.custom.badrequest.DuplicateEmailException;
+import com.example.scheduledevelopproject.exception.custom.badrequest.NoMatchPasswordConfirmation;
+import com.example.scheduledevelopproject.exception.custom.forbidden.ForbiddenUserAccessException;
+import com.example.scheduledevelopproject.exception.custom.notfound.NotFoundUserIdException;
+import com.example.scheduledevelopproject.exception.custom.unauthorized.UnauthorizedLoginException;
+import com.example.scheduledevelopproject.exception.custom.unauthorized.UnauthorizedUserPasswordException;
 import com.example.scheduledevelopproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,10 +35,10 @@ public class UserService {
 
     @Transactional
     public Users login(LoginRequestDto dto) {
-        Users findUser = userRepository.findUsersByEmailOrElseThrow(dto.getEmail());
+        Users findUser = findUsersByEmailOrElseThrow(dto.getEmail());
 
         if (!PasswordEncoder.matches(dto.getPassword(), findUser.getPassword())) {
-            throw new PasswordMismatchException("비밀번호 불일치");
+            throw new UnauthorizedLoginException("로그인 - 가입된 유저의 비밀번호와 입력된 비밀번호 불일치");
         }
         return findUser;
     }
@@ -42,7 +46,10 @@ public class UserService {
     @Transactional
     public UserResponseDto signUpUser(UserSignUpRequestDto dto) {
         if (!dto.getPassword().equals(dto.getPasswordCheck())) {
-            throw new NoMatchPasswordConfirmation("회원가입 유저 비밀번호 확인 불일치");
+            throw new NoMatchPasswordConfirmation("회원가입 - 유저 비밀번호 확인 불일치");
+        }
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new DuplicateEmailException("회원가입 - 이미 사용 중인 이메일");
         }
 
         Users user = new Users(dto);
@@ -61,16 +68,16 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserResponseDto findUserById(Long id) {
-        Users findUser = userRepository.findUsersByIdOrElseThrow(id);
+        Users findUser = findUsersByIdOrElseThrow(id);
         return new UserResponseDto(findUser);
     }
 
     @Transactional
     public UserResponseDto updateUsername(Long id, Long userIdBySession, UserUpdateNameRequestDto dto) {
-        Users findUser = userRepository.findUsersByIdOrElseThrow(id);
+        Users findUser = findUsersByIdOrElseThrow(id);
 
         if (!Objects.equals(userIdBySession, findUser.getId())) {
-            throw new UnauthorizedUserAccessException("유저 수정 권한 없음");
+            throw new ForbiddenUserAccessException("유저 이름 수정 - 해당 로그인 회원이 수정할 수 없는 유저 정보");
         }
 
         findUser.updateUsers(dto.getName());
@@ -80,13 +87,16 @@ public class UserService {
     @Transactional
     public void updatePassword(Long id, Long userIdBySession, UserUpdatePasswordRequestDto dto) {
         if (!dto.getNewPassword().equals(dto.getNewPasswordCheck())) {
-            throw new NoMatchPasswordConfirmation("유저 비밀번호 확인 불일치");
+            throw new NoMatchPasswordConfirmation("유저 비밀번호 수정 - 유저 비밀번호 확인 불일치");
         }
 
-        Users findUser = userRepository.findUsersByIdOrElseThrow(id);
+        Users findUser = findUsersByIdOrElseThrow(id);
 
         if (!Objects.equals(userIdBySession, findUser.getId())) {
-            throw new UnauthorizedUserAccessException("유저 수정 권한 없음");
+            throw new ForbiddenUserAccessException("유저 비밀번호 수정 - 해당 로그인 회원이 수정할 수 없는 유저 정보");
+        }
+        if (!PasswordEncoder.matches(dto.getOldPassword(), findUser.getPassword())) {
+            throw new UnauthorizedUserPasswordException("유저 비밀번호 수정 - 가입된 유저의 비밀번호와 입력된 비밀번호 불일치");
         }
 
         findUser.updatePassword(PasswordEncoder.encode(dto.getNewPassword()));
@@ -94,18 +104,24 @@ public class UserService {
 
     @Transactional
     public void deleteUser(Long id, Long userIdBySession, String password) {
-        Users findUser = userRepository.findUsersByIdOrElseThrow(id);
+        Users findUser = findUsersByIdOrElseThrow(id);
 
         if (!Objects.equals(userIdBySession, findUser.getId())) {
-            throw new UnauthorizedUserAccessException("유저 수정 권한 없음");
+            throw new ForbiddenUserAccessException("유저 삭제 - 해당 로그인 회원이 삭제할 수 없는 유저 정보");
         }
         if (!PasswordEncoder.matches(password, findUser.getPassword())) {
-            throw new NoMatchPasswordConfirmation("비밀번호 불일치");
+            throw new UnauthorizedUserPasswordException("유저 삭제 - 가입된 유저의 비밀번호와 입력된 비밀번호 불일치");
         }
         userRepository.delete(findUser);
     }
 
     public Users findUsersByIdOrElseThrow(Long userId) {
-        return userRepository.findUsersByIdOrElseThrow(userId);
+        return userRepository.findUsersById(userId).orElseThrow(() ->
+                new NotFoundUserIdException("입력된 user id로 유저를 찾을 수 없음"));
+    }
+
+    private Users findUsersByEmailOrElseThrow(String email){
+        return userRepository.findUsersByEmail(email).orElseThrow(() ->
+                new NotFoundUserByEmailException("입력된 이메일로 유저를 찾을 수 없음"));
     }
 }

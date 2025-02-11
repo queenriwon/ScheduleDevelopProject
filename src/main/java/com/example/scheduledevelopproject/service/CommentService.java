@@ -6,10 +6,8 @@ import com.example.scheduledevelopproject.dto.response.PageResponseDto;
 import com.example.scheduledevelopproject.entity.Comments;
 import com.example.scheduledevelopproject.entity.Schedules;
 import com.example.scheduledevelopproject.entity.Users;
-import com.example.scheduledevelopproject.exception.custom.NotFoundCommentId;
-import com.example.scheduledevelopproject.exception.custom.NotFoundScheduleId;
-import com.example.scheduledevelopproject.exception.custom.UnauthorizedCommentAccessException;
-import com.example.scheduledevelopproject.exception.custom.UnauthorizedScheduleAccessException;
+import com.example.scheduledevelopproject.exception.custom.notfound.NotFoundCommentIdException;
+import com.example.scheduledevelopproject.exception.custom.forbidden.ForbiddenCommentAccessException;
 import com.example.scheduledevelopproject.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -55,7 +52,7 @@ public class CommentService {
         Users findCommentUsers = findComment.getUsers();
 
         if (!Objects.equals(userId, findCommentUsers.getId())) {
-            throw new UnauthorizedCommentAccessException("댓글 수정 권한 없음");
+            throw new ForbiddenCommentAccessException("댓글 수정 - 해당 로그인 회원이 수정할 수 없는 댓글");
         }
         findComment.updateContents(dto.getContents());
 
@@ -67,13 +64,13 @@ public class CommentService {
         Users findCommentUsers = findComment.getUsers();
 
         if (!Objects.equals(userId, findCommentUsers.getId())) {
-            throw new UnauthorizedCommentAccessException("댓글 삭제 권한 없음");
+            throw new ForbiddenCommentAccessException("댓글 삭제 - 해당 로그인 회원이 삭제할 수 없는 댓글");
         }
         commentRepository.deleteById(commentId);
     }
 
     private Comments findCommentsByIdOrElseThrow(Long id) {
         return commentRepository.findCommentsById(id).orElseThrow(() ->
-                new NotFoundCommentId("일정 id를 찾지 못함"));
+                new NotFoundCommentIdException("입력된 id로 댓글을 찾을 수 없음"));
     }
 }

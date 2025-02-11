@@ -1,6 +1,5 @@
 package com.example.scheduledevelopproject.dto.response;
 
-import com.example.scheduledevelopproject.exception.ErrorCode;
 import com.example.scheduledevelopproject.exception.custom.BaseException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

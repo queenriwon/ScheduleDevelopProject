@@ -1,7 +1,6 @@
 package com.example.scheduledevelopproject.repository;
 
 import com.example.scheduledevelopproject.entity.Schedules;
-import com.example.scheduledevelopproject.exception.custom.NotFoundScheduleId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

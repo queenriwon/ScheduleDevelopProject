@@ -1,18 +1,15 @@
 package com.example.scheduledevelopproject.service;
 
-import com.example.scheduledevelopproject.config.PasswordEncoder;
 import com.example.scheduledevelopproject.dto.request.ScheduleCreateRequestDto;
 import com.example.scheduledevelopproject.dto.request.ScheduleUpdateRequestDto;
 import com.example.scheduledevelopproject.dto.response.PageResponseDto;
 import com.example.scheduledevelopproject.dto.response.ScheduleResponseDto;
 import com.example.scheduledevelopproject.entity.Schedules;
 import com.example.scheduledevelopproject.entity.Users;
-import com.example.scheduledevelopproject.exception.custom.InvalidScheduleUpdateRequestException;
-import com.example.scheduledevelopproject.exception.custom.NotFoundScheduleId;
-import com.example.scheduledevelopproject.exception.custom.PasswordMismatchException;
-import com.example.scheduledevelopproject.exception.custom.UnauthorizedScheduleAccessException;
+import com.example.scheduledevelopproject.exception.custom.badrequest.InvalidScheduleUpdateRequestException;
+import com.example.scheduledevelopproject.exception.custom.forbidden.ForbiddenScheduleAccessException;
+import com.example.scheduledevelopproject.exception.custom.notfound.NotFoundScheduleIdException;
 import com.example.scheduledevelopproject.repository.ScheduleRepository;
-import com.example.scheduledevelopproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,9 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,22 +48,21 @@ public class ScheduleService {
 
     @Transactional(readOnly = true)
     public ScheduleResponseDto findScheduleById(Long id) {
-        Schedules findSchedule = scheduleRepository.findSchedulesById(id).orElseThrow(()->
-                new NotFoundScheduleId("찾을 수 없는 일정"));
+        Schedules findSchedule = findSchedulesByIdOrElseThrow(id);
         return new ScheduleResponseDto(findSchedule);
     }
 
     @Transactional
     public ScheduleResponseDto updateSchedule(Long id, Long userId, ScheduleUpdateRequestDto dto) {
         if (dto.getTodoTitle() == null && dto.getTodoContents() == null) {
-            throw new InvalidScheduleUpdateRequestException("일정 제목, 내용 모두 받지 못함");
+            throw new InvalidScheduleUpdateRequestException("일정 제목 내용 수정 - 일정 제목, 내용 모두 받지 못함");
         }
 
         Schedules findSchedule = findSchedulesByIdOrElseThrow(id);
         Users findScheduleUsers = findSchedule.getUsers();
 
         if (!Objects.equals(userId, findScheduleUsers.getId())) {
-            throw new UnauthorizedScheduleAccessException("일정 수정 - 해당 로그인 회원이 수정할 수 없는 일정");
+            throw new ForbiddenScheduleAccessException("일정 수정 - 해당 로그인 회원이 수정할 수 없는 일정");
         }
 
         if (dto.getTodoTitle() != null) {
@@ -87,7 +81,7 @@ public class ScheduleService {
         Users findScheduleUsers = findSchedule.getUsers();
 
         if (!Objects.equals(userId, findScheduleUsers.getId())) {
-            throw new UnauthorizedScheduleAccessException("일정 수정 권한 없음");
+            throw new ForbiddenScheduleAccessException("일정 삭제 - 해당 로그인 회원이 삭제할 수 없는 일정");
         }
 
         scheduleRepository.deleteById(id);
@@ -95,6 +89,6 @@ public class ScheduleService {
 
     public Schedules findSchedulesByIdOrElseThrow(Long id) {
         return scheduleRepository.findSchedulesById(id).orElseThrow(()->
-                new NotFoundScheduleId("찾을 수 없는 일정"));
+                new NotFoundScheduleIdException("입력된 id로 일정을 찾을 수 없음"));
     }
 }

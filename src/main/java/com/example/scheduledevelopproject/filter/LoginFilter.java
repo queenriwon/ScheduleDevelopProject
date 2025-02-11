@@ -36,11 +36,11 @@ public class LoginFilter implements Filter {
             HttpSession session = httpRequest.getSession(false);
 
             // Todo: 에러처리를 따로 해줘야됨
-            if (session == null || session.getAttribute("userId") == null) {
+            if (session == null || session.getAttribute("user") == null) {
                 throw new RuntimeException("로그인을 해야 이용할 수 있습니다.");
             }
 
-            log.info("로그인된 사용자 = {}", session.getAttribute("userId"));
+            log.info("로그인된 사용자 = {}", session.getAttribute("user"));
         }
 
         filterChain.doFilter(servletRequest, servletResponse);

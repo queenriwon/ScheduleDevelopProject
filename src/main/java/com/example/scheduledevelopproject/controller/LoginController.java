@@ -1,6 +1,7 @@
 package com.example.scheduledevelopproject.controller;
 
 import com.example.scheduledevelopproject.dto.request.LoginRequestDto;
+import com.example.scheduledevelopproject.dto.SessionUserDto;
 import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
 import com.example.scheduledevelopproject.entity.Users;
 import com.example.scheduledevelopproject.exception.ErrorCode;
@@ -35,7 +36,7 @@ public class LoginController {
                     loginUser.getId(),
                     loginUser.getName(),
                     loginUser.getEmail());
-            session.setAttribute("user", loginUser);
+            session.setAttribute("user", new SessionUserDto(loginUser));
             session.setMaxInactiveInterval(1800); //30분
 
             return ApiResponseDto.OK("로그인 성공");

@@ -1,7 +1,7 @@
 package com.example.scheduledevelopproject.config;
 
 import com.example.scheduledevelopproject.annotation.SessionUser;
-import com.example.scheduledevelopproject.dto.request.UserSessionDto;
+import com.example.scheduledevelopproject.dto.SessionUserDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ public class SessionUserArgumentResolver implements HandlerMethodArgumentResolve
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(SessionUser.class)
-                && parameter.getParameterType().equals(UserSessionDto.class);
+                && parameter.getParameterType().equals(SessionUserDto.class);
     }
 
     @Override
@@ -31,9 +31,10 @@ public class SessionUserArgumentResolver implements HandlerMethodArgumentResolve
 //        // todo: null이 리턴되는 경우 어떻게 될까...
 //        return session.getSession(false);
         HttpSession session = httpServletRequest.getSession(false);
-        if (session == null) {
+        SessionUserDto sessionUserDto = (SessionUserDto) session.getAttribute("user");
+        if (sessionUserDto == null) {
             throw new RuntimeException("세션null에러");
         }
-        return session.getAttribute("user");
+        return sessionUserDto;
     }
 }

@@ -1,7 +1,7 @@
 package com.example.scheduledevelopproject.controller;
 
 import com.example.scheduledevelopproject.annotation.SessionUser;
-import com.example.scheduledevelopproject.dto.request.UserSessionDto;
+import com.example.scheduledevelopproject.dto.SessionUserDto;
 import com.example.scheduledevelopproject.dto.request.UserSignUpRequestDto;
 import com.example.scheduledevelopproject.dto.request.UserUpdateNameRequestDto;
 import com.example.scheduledevelopproject.dto.request.UserUpdatePasswordRequestDto;
@@ -49,7 +49,7 @@ public class UserController {
     public ApiResponseDto<UserResponseDto> updateUsername(
             @PathVariable Long userId,
             @Valid @RequestBody UserUpdateNameRequestDto dto,
-            @SessionUser UserSessionDto userSession
+            @SessionUser SessionUserDto userSession
     ) {
         UserResponseDto userResponseDto = userService.updateUsername(userId, userSession.getId(), dto);
         return ApiResponseDto.OK(userResponseDto, "id " + userId + " 유저이름 수정 성공");
@@ -59,7 +59,7 @@ public class UserController {
     public ApiResponseDto<Void> updatePassword(
             @PathVariable Long userId,
             @Valid @RequestBody UserUpdatePasswordRequestDto dto,
-            @SessionUser UserSessionDto userSession
+            @SessionUser SessionUserDto userSession
     ) {
         userService.updatePassword(userId, userSession.getId(), dto);
         return ApiResponseDto.OK("id " + userId + " 비밀번호 수정 성공");
@@ -69,7 +69,7 @@ public class UserController {
     public ApiResponseDto<Void> deleteUser(
             @PathVariable Long userId,
             @RequestBody Map<String, String> password,
-            @SessionUser UserSessionDto userSession
+            @SessionUser SessionUserDto userSession
     ) {
         userService.deleteUser(userId, userSession.getId(), password.get("password"));
         return ApiResponseDto.OK("id " + userId + " 회원 탈퇴");

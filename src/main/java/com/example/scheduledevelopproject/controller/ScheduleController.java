@@ -3,7 +3,7 @@ package com.example.scheduledevelopproject.controller;
 import com.example.scheduledevelopproject.annotation.SessionUser;
 import com.example.scheduledevelopproject.dto.request.ScheduleCreateRequestDto;
 import com.example.scheduledevelopproject.dto.request.ScheduleUpdateRequestDto;
-import com.example.scheduledevelopproject.dto.request.UserSessionDto;
+import com.example.scheduledevelopproject.dto.SessionUserDto;
 import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
 import com.example.scheduledevelopproject.dto.response.PageResponseDto;
 import com.example.scheduledevelopproject.dto.response.ScheduleResponseDto;
@@ -24,7 +24,7 @@ public class ScheduleController {
     @PostMapping
     public ApiResponseDto<ScheduleResponseDto> createSchedule(
             @Valid @RequestBody ScheduleCreateRequestDto dto,
-            @SessionUser UserSessionDto userSession
+            @SessionUser SessionUserDto userSession
             ) {
         ScheduleResponseDto scheduleResponseDto = scheduleService.createSchedule(userSession.getId(), dto);
         return ApiResponseDto.OK(scheduleResponseDto, "일정 작성 성공");
@@ -49,7 +49,7 @@ public class ScheduleController {
     public ApiResponseDto<ScheduleResponseDto> updateSchedule(
             @PathVariable Long id,
             @Valid @RequestBody ScheduleUpdateRequestDto dto,
-            @SessionUser UserSessionDto userSession
+            @SessionUser SessionUserDto userSession
     ) {
         ScheduleResponseDto scheduleResponseDto = scheduleService.updateSchedule(id, userSession.getId(), dto);
         return ApiResponseDto.OK(scheduleResponseDto, "id " + id + " 일정 수정 성공");
@@ -58,7 +58,7 @@ public class ScheduleController {
     @DeleteMapping("/{id}")
     public ApiResponseDto<Void> deleteSchedule(
             @PathVariable Long id,
-            @SessionUser UserSessionDto userSession
+            @SessionUser SessionUserDto userSession
     ) {
         scheduleService.deleteSchedule(id, userSession.getId());
         return ApiResponseDto.OK("id " + id + " 일정 삭제");

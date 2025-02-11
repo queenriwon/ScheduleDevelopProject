@@ -3,7 +3,7 @@ package com.example.scheduledevelopproject.controller;
 
 import com.example.scheduledevelopproject.annotation.SessionUser;
 import com.example.scheduledevelopproject.dto.request.CommentRequestDto;
-import com.example.scheduledevelopproject.dto.request.UserSessionDto;
+import com.example.scheduledevelopproject.dto.SessionUserDto;
 import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
 import com.example.scheduledevelopproject.dto.response.CommentResponseDto;
 import com.example.scheduledevelopproject.dto.response.PageResponseDto;
@@ -25,7 +25,7 @@ public class CommentController {
     public ApiResponseDto<CommentResponseDto> createComment(
             @PathVariable Long scheduleId,
             @Valid @RequestBody CommentRequestDto dto,
-            @SessionUser UserSessionDto userSession
+            @SessionUser SessionUserDto userSession
     ) {
         CommentResponseDto commentResponseDto = commentService.createComment(scheduleId, userSession.getId(), dto);
         return ApiResponseDto.OK(commentResponseDto,scheduleId + " 일정 댓글 작성");
@@ -46,7 +46,7 @@ public class CommentController {
             @PathVariable Long scheduleId,
             @PathVariable Long commentId,
             @Valid @RequestBody CommentRequestDto dto,
-            @SessionUser UserSessionDto userSession
+            @SessionUser SessionUserDto userSession
     ) {
         CommentResponseDto commentResponseDto = commentService.updateComment(commentId, userSession.getId(), dto);
         return ApiResponseDto.OK(commentResponseDto,scheduleId + " 일정 댓글 수정");
@@ -56,7 +56,7 @@ public class CommentController {
     public ApiResponseDto<Void> deleteComment(
             @PathVariable Long scheduleId,
             @PathVariable Long commentId,
-            @SessionUser UserSessionDto userSession
+            @SessionUser SessionUserDto userSession
     ) {
         commentService.deleteComment(commentId, userSession.getId());
         return ApiResponseDto.OK(scheduleId + " 일정 댓글 삭제");

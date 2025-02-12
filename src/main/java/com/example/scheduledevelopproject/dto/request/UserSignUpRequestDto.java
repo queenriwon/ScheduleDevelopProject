@@ -1,18 +1,11 @@
 package com.example.scheduledevelopproject.dto.request;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/*
-    “name”: “nameValue”,
-    “email”: “email@email.com”,
-    “password”: “passwordValue”,
-    “passwordCheck”: “passwordValue”
- */
 @Getter
 @AllArgsConstructor
 public class UserSignUpRequestDto {

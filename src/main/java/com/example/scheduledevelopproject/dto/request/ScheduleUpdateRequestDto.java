@@ -1,15 +1,8 @@
 package com.example.scheduledevelopproject.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-/*
-    “todoTitle”: “todoTitleValue”,
-    “todoContents”: “todoContentsValue”,
- */
-// ScheduleCreateRequestDto와 다른 유효성 사용
 
 @Getter
 @AllArgsConstructor

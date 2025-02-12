@@ -2,9 +2,7 @@ package com.example.scheduledevelopproject.config;
 
 import com.example.scheduledevelopproject.annotation.SessionUser;
 import com.example.scheduledevelopproject.dto.SessionUserDto;
-import com.example.scheduledevelopproject.exception.custom.UnauthorizedException;
 import com.example.scheduledevelopproject.exception.custom.unauthorized.UnauthorizedAccessException;
-import com.example.scheduledevelopproject.exception.custom.unauthorized.UnauthorizedLoginException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Configuration;

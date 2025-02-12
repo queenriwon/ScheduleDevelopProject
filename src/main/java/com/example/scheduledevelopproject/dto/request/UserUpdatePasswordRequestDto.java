@@ -3,13 +3,6 @@ package com.example.scheduledevelopproject.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-
-/*
-    “oldPassword”: “passwordValue”,
-    “newPassword”: “newPassword”,
-    “newPasswordCheck”: “newPassword”
- */
 
 @Getter
 @AllArgsConstructor

@@ -1,6 +1,5 @@
 package com.example.scheduledevelopproject.dto.response;
 
-import com.example.scheduledevelopproject.annotation.SessionUser;
 import com.example.scheduledevelopproject.entity.Users;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -30,6 +29,4 @@ public class UserResponseDto{
         this.createdAt = user.getCreatedAt();
         this.modifiedAt = user.getModifiedAt();
     }
-
-
 }

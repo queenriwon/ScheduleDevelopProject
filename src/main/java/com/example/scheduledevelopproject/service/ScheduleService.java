@@ -23,23 +23,19 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ScheduleService {
 
-    private final UserService userService;
     private final ScheduleRepository scheduleRepository;
 
     public ScheduleResponseDto createSchedule(Users users, ScheduleCreateRequestDto dto) {
-//        Users findUser = userService.findUsersByIdOrElseThrow(userId);
-
         Schedules schedules = new Schedules(dto);
         schedules.setUsers(users);
 
-        scheduleRepository.save(schedules);
+        Schedules saveSchedule = scheduleRepository.save(schedules);
 
-        return new ScheduleResponseDto(findSchedulesByIdOrElseThrow(users.getId()));
+        return new ScheduleResponseDto(findSchedulesByIdOrElseThrow(saveSchedule.getId()));
     }
 
     @Transactional(readOnly = true)
     public PageResponseDto<ScheduleResponseDto> findAllSchedule(int page, int size) {
-
         Pageable pageable = PageRequest.of(page,size);
         Page<Schedules> schedulesPage = scheduleRepository.findAllByOrderByModifiedAtDesc(pageable);
         Page<ScheduleResponseDto> scheduleResponseDtoPage = schedulesPage.map(ScheduleResponseDto::new);

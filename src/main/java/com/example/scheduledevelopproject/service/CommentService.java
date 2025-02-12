@@ -25,13 +25,12 @@ public class CommentService {
     private final ScheduleService scheduleService;
     private final UserService userService;
 
-    public CommentResponseDto createComment(Long scheduleId, Long userId, CommentRequestDto dto) {
+    public CommentResponseDto createComment(Long scheduleId, Users users, CommentRequestDto dto) {
         Schedules findSchedule = scheduleService.findSchedulesByIdOrElseThrow(scheduleId);
-        Users findUser = userService.findUsersByIdOrElseThrow(userId);
 
         Comments comments = new Comments(dto);
         comments.setSchedules(findSchedule);
-        comments.setUsers(findUser);
+        comments.setUsers(users);
 
         Comments saveComment = commentRepository.save(comments);
         return new CommentResponseDto(saveComment);

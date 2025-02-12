@@ -10,6 +10,8 @@ import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
 import com.example.scheduledevelopproject.dto.response.PageResponseDto;
 import com.example.scheduledevelopproject.dto.response.UserResponseDto;
 import com.example.scheduledevelopproject.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,9 +55,14 @@ public class UserController {
     public ApiResponseDto<UserResponseDto> updateUsername(
             @PathVariable Long userId,
             @Valid @RequestBody UserUpdateNameRequestDto dto,
+            HttpServletRequest httpServletRequest,
             @SessionUser SessionUserDto userSession
     ) {
         UserResponseDto userResponseDto = userService.updateUsername(userId, userSession.getId(), dto);
+
+        // 세션에 저장된 유저 이름 수정
+        HttpSession session = httpServletRequest.getSession(false);
+        session.setAttribute("user", userSession.setUserName(dto.getName()));
         return ApiResponseDto.OK(userResponseDto, "id " + userId + " 유저이름 수정 성공");
     }
 

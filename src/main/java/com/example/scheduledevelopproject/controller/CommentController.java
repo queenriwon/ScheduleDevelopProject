@@ -29,7 +29,7 @@ public class CommentController {
             @Valid @RequestBody CommentRequestDto dto,
             @SessionUser SessionUserDto userSession
     ) {
-        CommentResponseDto commentResponseDto = commentService.createComment(scheduleId, userSession.getId(), dto);
+        CommentResponseDto commentResponseDto = commentService.createComment(scheduleId, userSession.toUsers(), dto);
         return ApiResponseDto.OK(commentResponseDto,scheduleId + " 일정 댓글 작성");
     }
 

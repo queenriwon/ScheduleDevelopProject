@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -25,14 +28,22 @@ public class Users extends BaseEntity{
     @Column(nullable = false)
     private String password;
 
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Schedules> schedules = new ArrayList<>();
+
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comments> comments = new ArrayList<>();
+
     public Users(UserSignUpRequestDto dto) {
         this.name = dto.getName();
         this.email = dto.getEmail();
         this.password = PasswordEncoder.encode(dto.getPassword());
     }
 
-    public Users(Long id) {
+    public Users(Long id, String name, String email) {
         this.id = id;
+        this.name = name;
+        this.email = email;
     }
 
     public void updateUsers(String name) {

@@ -1,7 +1,6 @@
 package com.example.scheduledevelopproject.dto.response;
 
 import com.example.scheduledevelopproject.entity.Schedules;
-import com.example.scheduledevelopproject.entity.Users;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

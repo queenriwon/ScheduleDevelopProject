@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -35,6 +36,7 @@ public class CommentService {
         return new CommentResponseDto(saveComment);
     }
 
+    @Transactional(readOnly = true)
     public PageResponseDto<CommentResponseDto> findAllComment(Long scheduleId, int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size);
@@ -45,6 +47,7 @@ public class CommentService {
         return new PageResponseDto<>(commentResponseDtoPage);
     }
 
+    @Transactional
     public CommentResponseDto updateComment(Long commentId, Long userId, CommentRequestDto dto) {
         Comments findComment = findCommentsByIdOrElseThrow(commentId);
         Users findCommentUsers = findComment.getUsers();
@@ -57,6 +60,7 @@ public class CommentService {
         return new CommentResponseDto(findCommentsByIdOrElseThrow(commentId));
     }
 
+    @Transactional
     public void deleteComment(Long commentId, Long userId) {
         Comments findComment = findCommentsByIdOrElseThrow(commentId);
         Users findCommentUsers = findComment.getUsers();

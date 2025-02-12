@@ -9,8 +9,6 @@ import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
 import com.example.scheduledevelopproject.dto.response.PageResponseDto;
 import com.example.scheduledevelopproject.dto.response.ScheduleResponseDto;
 import com.example.scheduledevelopproject.service.ScheduleService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

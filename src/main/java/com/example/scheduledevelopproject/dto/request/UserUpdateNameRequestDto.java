@@ -1,14 +1,10 @@
 package com.example.scheduledevelopproject.dto.request;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/*
-    “name”: “nameValue”
- */
 @Getter
 @AllArgsConstructor
 public class UserUpdateNameRequestDto {

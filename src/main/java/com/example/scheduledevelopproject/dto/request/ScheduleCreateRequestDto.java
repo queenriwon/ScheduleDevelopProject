@@ -3,13 +3,7 @@ package com.example.scheduledevelopproject.dto.request;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
-/*
-    “todoTitle”: “todoTitleValue”,
-    “todoContents”: “todoContentsValue”,
-    "password": "passwordValue"
- */
 @Getter
 @AllArgsConstructor
 public class ScheduleCreateRequestDto {
@@ -20,8 +14,5 @@ public class ScheduleCreateRequestDto {
 
     @NotBlank(message = "일정 내용은 필수 입력값 입니다.")
     private final String todoContents;
-
-//    @NotBlank(message = "비밀번호는 필수 입력값 입니다.")
-//    private final String password;
 
 }

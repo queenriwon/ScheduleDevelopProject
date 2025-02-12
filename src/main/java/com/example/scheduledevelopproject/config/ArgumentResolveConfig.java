@@ -1,6 +1,6 @@
 package com.example.scheduledevelopproject.config;
 
-import com.example.scheduledevelopproject.filter.LoginInterceptor;
+import com.example.scheduledevelopproject.interceptor.LoginInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

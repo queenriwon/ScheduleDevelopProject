@@ -17,16 +17,4 @@ public class WebConfig {
 
         return filterRegistrationBean;
     }
-
-
-
-//    @Bean
-//    public FilterRegistrationBean loginFilter() {
-//        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-//        filterRegistrationBean.setFilter(new LoginFilter());
-//        filterRegistrationBean.setOrder(2);
-//        filterRegistrationBean.addUrlPatterns("/*");
-//
-//        return filterRegistrationBean;
-//    }
 }

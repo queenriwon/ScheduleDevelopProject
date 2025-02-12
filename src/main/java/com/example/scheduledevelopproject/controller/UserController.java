@@ -25,7 +25,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @LoginRequired
     @PostMapping("/signup")
     public ApiResponseDto<UserResponseDto> signUpUser(@Valid @RequestBody UserSignUpRequestDto dto) {
         UserResponseDto userResponseDto = userService.signUpUser(dto);

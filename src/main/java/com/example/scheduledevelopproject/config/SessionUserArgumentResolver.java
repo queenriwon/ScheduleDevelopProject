@@ -28,9 +28,10 @@ public class SessionUserArgumentResolver implements HandlerMethodArgumentResolve
             WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest httpServletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
 
-//        // todo: null이 리턴되는 경우 어떻게 될까...
-//        return session.getSession(false);
         HttpSession session = httpServletRequest.getSession(false);
+        if (session == null) {
+            session = httpServletRequest.getSession();
+        }
         SessionUserDto sessionUserDto = (SessionUserDto) session.getAttribute("user");
         if (sessionUserDto == null) {
             throw new RuntimeException("세션null에러");

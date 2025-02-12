@@ -29,6 +29,7 @@ public class ScheduleController {
             @SessionUser SessionUserDto userSession
             ) {
         ScheduleResponseDto scheduleResponseDto = scheduleService.createSchedule(userSession.getId(), dto);
+        log.info("일정 작성 성공");
         return ApiResponseDto.OK(scheduleResponseDto, "일정 작성 성공");
     }
 

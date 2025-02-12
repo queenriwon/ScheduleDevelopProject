@@ -46,27 +46,25 @@ public class CommentController {
     }
 
     @LoginRequired
-    @PatchMapping("/{scheduleId}/comments/{commentId}")
+    @PatchMapping("/comments/{commentId}")
     public ApiResponseDto<CommentResponseDto> updateComment(
-            @PathVariable Long scheduleId,
             @PathVariable Long commentId,
             @Valid @RequestBody CommentRequestDto dto,
             @SessionUser SessionUserDto userSession
     ) {
         CommentResponseDto commentResponseDto = commentService.updateComment(commentId, userSession.getId(), dto);
-        log.info("id {} 일정 댓글 수정", scheduleId);
-        return ApiResponseDto.OK(commentResponseDto,"id" + scheduleId + " 일정 댓글 수정");
+        log.info("id {} 댓글 수정", commentId);
+        return ApiResponseDto.OK(commentResponseDto,"id" + commentId + " 댓글 수정");
     }
 
     @LoginRequired
-    @DeleteMapping("/{scheduleId}/comments/{commentId}")
+    @DeleteMapping("/comments/{commentId}")
     public ApiResponseDto<Void> deleteComment(
-            @PathVariable Long scheduleId,
             @PathVariable Long commentId,
             @SessionUser SessionUserDto userSession
     ) {
         commentService.deleteComment(commentId, userSession.getId());
-        log.info("id {} 일정 댓글 삭제", scheduleId);
-        return ApiResponseDto.OK("id" + scheduleId + " 일정 댓글 삭제");
+        log.info("id {} 댓글 삭제", commentId);
+        return ApiResponseDto.OK("id" + commentId + " 댓글 삭제");
     }
 }

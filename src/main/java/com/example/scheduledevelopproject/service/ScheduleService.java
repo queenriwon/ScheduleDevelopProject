@@ -31,7 +31,7 @@ public class ScheduleService {
 
         Schedules saveSchedule = scheduleRepository.save(schedules);
 
-        return new ScheduleResponseDto(findSchedulesByIdOrElseThrow(saveSchedule.getId()));
+        return new ScheduleResponseDto(saveSchedule);
     }
 
     @Transactional(readOnly = true)

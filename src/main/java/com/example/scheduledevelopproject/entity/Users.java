@@ -31,6 +31,10 @@ public class Users extends BaseEntity{
         this.password = PasswordEncoder.encode(dto.getPassword());
     }
 
+    public Users(Long id) {
+        this.id = id;
+    }
+
     public void updateUsers(String name) {
         this.name = name;
     }

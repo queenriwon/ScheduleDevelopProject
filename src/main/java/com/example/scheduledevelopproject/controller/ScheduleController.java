@@ -28,7 +28,7 @@ public class ScheduleController {
             @Valid @RequestBody ScheduleCreateRequestDto dto,
             @SessionUser SessionUserDto userSession
             ) {
-        ScheduleResponseDto scheduleResponseDto = scheduleService.createSchedule(userSession.getId(), dto);
+        ScheduleResponseDto scheduleResponseDto = scheduleService.createSchedule(userSession.toUsers(), dto);
         log.info("일정 작성 성공");
         return ApiResponseDto.OK(scheduleResponseDto, "일정 작성 성공");
     }

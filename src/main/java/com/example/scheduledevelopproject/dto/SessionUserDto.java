@@ -9,12 +9,16 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SessionUserDto {
     private final Long id;
-    private final String name;
+//    private final String name;
     private final String email;
 
     public SessionUserDto(Users users) {
         this.id = users.getId();
-        this.name = users.getName();
+//        this.name = users.getName();
         this.email = users.getName();
+    }
+
+    public Users toUsers() {
+        return new Users(this.id);
     }
 }

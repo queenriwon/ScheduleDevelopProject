@@ -26,15 +26,15 @@ public class ScheduleService {
     private final UserService userService;
     private final ScheduleRepository scheduleRepository;
 
-    public ScheduleResponseDto createSchedule(Long userId, ScheduleCreateRequestDto dto) {
-        Users findUser = userService.findUsersByIdOrElseThrow(userId);
+    public ScheduleResponseDto createSchedule(Users users, ScheduleCreateRequestDto dto) {
+//        Users findUser = userService.findUsersByIdOrElseThrow(userId);
 
         Schedules schedules = new Schedules(dto);
-        schedules.setUsers(findUser);
+        schedules.setUsers(users);
 
-        Schedules saveSchedule = scheduleRepository.save(schedules);
+        scheduleRepository.save(schedules);
 
-        return new ScheduleResponseDto(saveSchedule);
+        return new ScheduleResponseDto(findSchedulesByIdOrElseThrow(users.getId()));
     }
 
     @Transactional(readOnly = true)

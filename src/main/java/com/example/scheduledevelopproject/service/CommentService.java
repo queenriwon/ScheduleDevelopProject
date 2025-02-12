@@ -23,7 +23,6 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final ScheduleService scheduleService;
-    private final UserService userService;
 
     public CommentResponseDto createComment(Long scheduleId, Users users, CommentRequestDto dto) {
         Schedules findSchedule = scheduleService.findSchedulesByIdOrElseThrow(scheduleId);

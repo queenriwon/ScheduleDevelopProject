@@ -41,12 +41,14 @@ public class ScheduleController {
             @RequestParam(defaultValue = "10") int size
     ) {
         PageResponseDto<ScheduleResponseDto> allSchedule = scheduleService.findAllSchedule(page, size);
+        log.info("일정 전체 조회 성공");
         return ApiResponseDto.OK(allSchedule, "일정 전체 조회 성공");
     }
 
     @GetMapping("/{id}")
     public ApiResponseDto<ScheduleResponseDto> findScheduleById(@PathVariable Long id) {
         ScheduleResponseDto scheduleResponseDto = scheduleService.findScheduleById(id);
+        log.info("id {} 일정 조회 성공", id);
         return ApiResponseDto.OK(scheduleResponseDto, "id " + id + " 일정 조회 성공");
     }
 
@@ -58,6 +60,7 @@ public class ScheduleController {
             @SessionUser SessionUserDto userSession
     ) {
         ScheduleResponseDto scheduleResponseDto = scheduleService.updateSchedule(id, userSession.getId(), dto);
+        log.info("id {} 일정 수정 성공", id);
         return ApiResponseDto.OK(scheduleResponseDto, "id " + id + " 일정 수정 성공");
     }
 
@@ -68,6 +71,7 @@ public class ScheduleController {
             @SessionUser SessionUserDto userSession
     ) {
         scheduleService.deleteSchedule(id, userSession.getId());
+        log.info("id {} 일정 삭제 성공", id);
         return ApiResponseDto.OK("id " + id + " 일정 삭제");
     }
 }

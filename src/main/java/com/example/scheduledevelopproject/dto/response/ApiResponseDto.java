@@ -1,6 +1,6 @@
 package com.example.scheduledevelopproject.dto.response;
 
-import com.example.scheduledevelopproject.exception.custom.BaseException;
+import com.example.scheduledevelopproject.exception.custom.HandledException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public class ApiResponseDto<T> {
         return new ApiResponseDto<>(HttpStatus.OK.value(), message, null, null);
     }
 
-    public static <T> ApiResponseDto<T> fail(BaseException ex) {
+    public static <T> ApiResponseDto<T> fail(HandledException ex) {
         return new ApiResponseDto<>(ex.getHttpStatus().value(),
                 ex.getHttpStatus().name(),
                 null,

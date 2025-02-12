@@ -2,6 +2,9 @@ package com.example.scheduledevelopproject.config;
 
 import com.example.scheduledevelopproject.annotation.SessionUser;
 import com.example.scheduledevelopproject.dto.SessionUserDto;
+import com.example.scheduledevelopproject.exception.custom.UnauthorizedException;
+import com.example.scheduledevelopproject.exception.custom.unauthorized.UnauthorizedAccessException;
+import com.example.scheduledevelopproject.exception.custom.unauthorized.UnauthorizedLoginException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +37,7 @@ public class SessionUserArgumentResolver implements HandlerMethodArgumentResolve
         }
         SessionUserDto sessionUserDto = (SessionUserDto) session.getAttribute("user");
         if (sessionUserDto == null) {
-            throw new RuntimeException("세션null에러");
+            throw new UnauthorizedAccessException("비로그인 사용자 접근 - 로그인 필요");
         }
         return sessionUserDto;
     }

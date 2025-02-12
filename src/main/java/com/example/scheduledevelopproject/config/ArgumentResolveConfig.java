@@ -1,6 +1,6 @@
 package com.example.scheduledevelopproject.config;
 
-import com.example.scheduledevelopproject.filter.LoginFilter;
+import com.example.scheduledevelopproject.filter.LoginInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -22,7 +22,7 @@ public class ArgumentResolveConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginFilter()).addPathPatterns("/**");
+        registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**");
     }
 
 }

@@ -14,18 +14,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    private ApiResponseDto<String> handleException(BaseException ex) {
+    private ApiResponseDto<String> handleException(HandledException ex) {
         log.error("예외 발생 = {}", ex.getMessage());
         return ApiResponseDto.fail(ex);
     }
 
-    @ExceptionHandler(BaseException.class)
-    protected ApiResponseDto<String> unauthorizedScheduleAccessExceptionHandler(BaseException ex) {
+    @ExceptionHandler(HandledException .class)
+    protected ApiResponseDto<String> handleHandledException(HandledException ex) {
         return handleException(ex);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ApiResponseDto<String> handleValidationExceptionHandler(MethodArgumentNotValidException ex) {
+    public ApiResponseDto<String> handleValidationException(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -39,6 +39,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     protected ApiResponseDto<String> handleGeneralException(Exception ex) {
         log.error("예외 발생 = {}", ex);
-        return handleException((BaseException) ex);
+        return handleException((HandledException) ex);
     }
 }

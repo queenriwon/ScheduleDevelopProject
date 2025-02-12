@@ -30,7 +30,8 @@ public class CommentController {
             @SessionUser SessionUserDto userSession
     ) {
         CommentResponseDto commentResponseDto = commentService.createComment(scheduleId, userSession.toUsers(), dto);
-        return ApiResponseDto.OK(commentResponseDto,scheduleId + " 일정 댓글 작성");
+        log.info("id {} 일정 댓글 작성", scheduleId);
+        return ApiResponseDto.OK(commentResponseDto,"id" + scheduleId + " 일정 댓글 작성");
     }
 
     @GetMapping("/{scheduleId}/comments")
@@ -40,7 +41,8 @@ public class CommentController {
             @RequestParam(defaultValue = "10") int size
     ) {
         PageResponseDto<CommentResponseDto> allComment = commentService.findAllComment(scheduleId, page, size);
-        return ApiResponseDto.OK(allComment, scheduleId + " 일정 댓글 조회");
+        log.info("id {} 일정 댓글 조회", scheduleId);
+        return ApiResponseDto.OK(allComment, "id" + scheduleId + " 일정 댓글 조회");
     }
 
     @LoginRequired
@@ -52,7 +54,8 @@ public class CommentController {
             @SessionUser SessionUserDto userSession
     ) {
         CommentResponseDto commentResponseDto = commentService.updateComment(commentId, userSession.getId(), dto);
-        return ApiResponseDto.OK(commentResponseDto,scheduleId + " 일정 댓글 수정");
+        log.info("id {} 일정 댓글 수정", scheduleId);
+        return ApiResponseDto.OK(commentResponseDto,"id" + scheduleId + " 일정 댓글 수정");
     }
 
     @LoginRequired
@@ -63,6 +66,7 @@ public class CommentController {
             @SessionUser SessionUserDto userSession
     ) {
         commentService.deleteComment(commentId, userSession.getId());
-        return ApiResponseDto.OK(scheduleId + " 일정 댓글 삭제");
+        log.info("id {} 일정 댓글 삭제", scheduleId);
+        return ApiResponseDto.OK("id" + scheduleId + " 일정 댓글 삭제");
     }
 }

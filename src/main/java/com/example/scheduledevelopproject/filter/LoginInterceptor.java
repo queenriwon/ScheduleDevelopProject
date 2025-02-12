@@ -1,7 +1,6 @@
 package com.example.scheduledevelopproject.filter;
 
 import com.example.scheduledevelopproject.annotation.LoginRequired;
-import com.example.scheduledevelopproject.dto.response.ApiResponseDto;
 import com.example.scheduledevelopproject.exception.custom.unauthorized.UnauthorizedAccessException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,16 +8,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.HandlerMapping;
-
-import java.io.PrintWriter;
 
 @Slf4j
-public class LoginFilter implements HandlerInterceptor {
+public class LoginInterceptor implements HandlerInterceptor {
 
     private static final String[] WHITE_LIST = {"/", "/users/signup", "/login", "/logout"};
 
@@ -29,32 +24,18 @@ public class LoginFilter implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-
         HandlerMethod handlerMethod = (HandlerMethod) handler;
-
         String requestURI = request.getRequestURI();
 
         if (requestURI.contains("/swagger-ui/") || requestURI.contains("/v3/api-docs")) {
             return true;
         }
 
-        log.info("로그인필터");
-
-//        if (!isWhiteList(requestURI)) {
         if (isLoginRequired(handlerMethod)) {
             HttpSession session = request.getSession(false);
 
             if (session == null || session.getAttribute("user") == null) {
-                log.info("비로그인자 접근");
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-
-                PrintWriter writer = response.getWriter();
-                writer.write(convertObjectToJson(ApiResponseDto.fail(new UnauthorizedAccessException("비로그인 사용자 접근 - 로그인을 해야 이용할 수 있습니다."))));
-                writer.flush();
-                writer.close();
-                return false;
+                throw new UnauthorizedAccessException("비로그인 사용자 접근 - 로그인 필요");
             }
 
             log.info("로그인된 사용자 = {}", session.getAttribute("user"));

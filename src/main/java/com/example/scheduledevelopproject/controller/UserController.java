@@ -30,6 +30,7 @@ public class UserController {
     @PostMapping("/signup")
     public ApiResponseDto<UserResponseDto> signUpUser(@Valid @RequestBody UserSignUpRequestDto dto) {
         UserResponseDto userResponseDto = userService.signUpUser(dto);
+        log.info("회원가입 성공");
         return ApiResponseDto.OK(userResponseDto, "회원가입 성공");
     }
 
@@ -40,6 +41,7 @@ public class UserController {
             @RequestParam(defaultValue = "10") int size
     ) {
         PageResponseDto<UserResponseDto> allUser = userService.findAllUser(page, size);
+        log.info("유저 전체 조회 성공");
         return ApiResponseDto.OK(allUser, "유저 전체 조회 성공");
     }
 
@@ -47,6 +49,7 @@ public class UserController {
     @GetMapping("/{userId}")
     public ApiResponseDto<UserResponseDto> findUserById(@PathVariable Long userId) {
         UserResponseDto userResponseDto = userService.findUserById(userId);
+        log.info("id {} 유저 조회 성공", userId);
         return ApiResponseDto.OK(userResponseDto, "id " + userId + " 유저 조회 성공");
     }
 
@@ -63,7 +66,8 @@ public class UserController {
         // 세션에 저장된 유저 이름 수정
         HttpSession session = httpServletRequest.getSession(false);
         session.setAttribute("user", userSession.setUserName(dto.getName()));
-        return ApiResponseDto.OK(userResponseDto, "id " + userId + " 유저이름 수정 성공");
+        log.info("id {} 유저 이름 수정 성공", userId);
+        return ApiResponseDto.OK(userResponseDto, "id " + userId + " 유저 이름 수정 성공");
     }
 
     @LoginRequired
@@ -74,6 +78,7 @@ public class UserController {
             @SessionUser SessionUserDto userSession
     ) {
         userService.updatePassword(userId, userSession.getId(), dto);
+        log.info("id {} 비밀번호 수정 성공", userId);
         return ApiResponseDto.OK("id " + userId + " 비밀번호 수정 성공");
     }
 
@@ -85,6 +90,7 @@ public class UserController {
             @SessionUser SessionUserDto userSession
     ) {
         userService.deleteUser(userId, userSession.getId(), password.get("password"));
+        log.info("id {} 회원 탈퇴", userId);
         return ApiResponseDto.OK("id " + userId + " 회원 탈퇴");
     }
 }

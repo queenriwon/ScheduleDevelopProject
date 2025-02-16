@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+
+// 리퀘스트DTO에는 final을 작성해주지 말 것, reflect 되기 때문에 생성자도 만들어줄 필요없음
 @Getter
 @AllArgsConstructor
 public class CommentRequestDto {

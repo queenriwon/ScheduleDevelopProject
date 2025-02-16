@@ -18,7 +18,7 @@ public class Comments extends BaseEntity{
     private Long id;
 
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)  // 사이드 이펙트를 줄일 수있음 (해당 테이블만 가져옴)
     @JoinColumn(name = "schedule_id")
     private Schedules schedules;
 
@@ -26,6 +26,8 @@ public class Comments extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Users users;
+
+    //ManyToOne으로 양방향을 모두 사용할 수 있음
 
     @Column(nullable = false)
     @Size(max = 200)

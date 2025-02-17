@@ -14,14 +14,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    private ApiResponseDto<String> handleException(HandledException ex) {
-        log.error("예외 발생 = {}", ex.getMessage());
-        return ApiResponseDto.fail(ex);
-    }
-
     @ExceptionHandler(HandledException .class)
     protected ApiResponseDto<String> handleHandledException(HandledException ex) {
-        return handleException(ex);
+        log.error("예외 발생 = {}", ex.getMessage());
+        return ApiResponseDto.fail(ex);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -33,12 +29,13 @@ public class GlobalExceptionHandler {
                 .findFirst()
                 .orElse("입력값이 올바르지 않습니다.");
 
+        log.error("예외 발생 = {}", errorMessage);
         return ApiResponseDto.fail(HttpStatus.BAD_REQUEST, errorMessage);
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(RuntimeException.class)
     protected ApiResponseDto<String> handleGeneralException(Exception ex) {
         log.error("예외 발생 = {}", ex);
-        return handleException((HandledException) ex);
+        return ApiResponseDto.fail(HttpStatus.INTERNAL_SERVER_ERROR, "내부 서버 오류");
     }
 }
